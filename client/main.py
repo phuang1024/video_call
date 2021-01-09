@@ -18,20 +18,25 @@
 import pygame
 from _constants import *
 from _conn import Conn
+from _login import Login
 pygame.init()
 
 
 def main():
     pygame.display.set_caption("Video Call")
-    window = pygame.display.set_mode((1280, 720))
+    window = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 
     width, height = 1280, 720
-    conn = Conn(IP, 5555)
+    #conn = Conn(IP, 5555)
+
+    pages = {
+        "login": Login()
+    }
 
     resized = False
     clock = pygame.time.Clock()
     while True:
-        clock.tick()
+        clock.tick(FPS)
         pygame.display.update()
         events = pygame.event.get()
         for event in events:
@@ -48,6 +53,7 @@ def main():
                 resized = False
 
         window.fill(BLACK)
+        pages["login"].draw(window, events)
 
 
 main()
