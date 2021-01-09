@@ -32,6 +32,8 @@ class Server:
         self.server.listen()
         while True:
             conn, addr = self.server.accept()
+            client = Client(conn, addr)
+            self.clients.append(client)
 
 
 class Client:
@@ -44,7 +46,7 @@ class Client:
     def send(self, obj):
         data = pickle.dumps(obj)
         length = len(data)
-        len_msg = (str(length) + " "*self.header).encode()
+        len_msg = (str(length) + " "*self.header).encode()[:self.header]
         self.conn.send(len_msg)
         self.conn.send(data)
 
