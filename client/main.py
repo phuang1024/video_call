@@ -23,7 +23,7 @@ pygame.init()
 
 def main():
     pygame.display.set_caption("Video Call")
-    window = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+    window = pygame.display.set_mode((1280, 720))
 
     width, height = 1280, 720
     conn = Conn(IP, 5555)
