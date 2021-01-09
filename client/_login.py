@@ -23,3 +23,6 @@ from _elements import Button
 class Login:
     def __init__(self):
         pass
+
+    def draw(self, window, events):
+        pass
