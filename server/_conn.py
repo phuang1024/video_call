@@ -15,9 +15,11 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import time
 import socket
 import threading
 import pickle
+from hashlib import sha256
 
 
 class Server:
@@ -35,7 +37,7 @@ class Server:
             client = Client(conn, addr)
             self.clients.append(client)
 
-            print(f"Connection: {addr[0]}")
+            print(f"[{addr[0]}] Connected")
 
 
 class Client:
@@ -44,6 +46,21 @@ class Client:
     def __init__(self, conn, addr):
         self.conn = conn
         self.addr = addr
+        self.active = True
+        self.auth()
+
+    def auth(self):
+        test_data = str(time.time()).encode()
+        real_ans = sha256(test_data).hexdigest()
+        self.send({"type": "auth", "test": test_data})
+        ans = self.recv()["ans"]
+
+        if real_ans == ans:
+            print(f"[{self.addr[0]}] Authenticated")
+        else:
+            print(f"[{self.addr[0]}] Authentication failed")
+            self.conn.close()
+            self.active = False
 
     def send(self, obj):
         data = pickle.dumps(obj)
