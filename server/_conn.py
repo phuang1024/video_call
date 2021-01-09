@@ -55,4 +55,4 @@ class Client:
     def recv(self):
         length = int(self.conn.recv(self.header))
         data = self.conn.recv(length)
-        return pickle.loads(length)
+        return pickle.loads(data)
