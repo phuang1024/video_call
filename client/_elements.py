@@ -271,4 +271,3 @@ class TextInput:
 
     def __repr__(self):
         return self.text
-
