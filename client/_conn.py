@@ -43,5 +43,4 @@ class Conn:
     def recv(self):
         length = int(self.conn.recv(self.header))
         data = self.conn.recv(length)
-        print(data)
         return pickle.loads(data)
