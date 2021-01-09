@@ -18,7 +18,7 @@
 import pygame
 pygame.init()
 
-#IP = input("IP address: ")
+IP = input("IP address: ")
 FPS = 60
 
 BLACK = (0, 0, 0)
