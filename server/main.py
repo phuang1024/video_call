@@ -14,3 +14,9 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 # ##### END GPL LICENSE BLOCK #####
+
+from _conn import Server
+
+ip = input("IP Address: ")
+server = Server(ip, 5555)
+server.start()
