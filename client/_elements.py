@@ -93,17 +93,20 @@ class Slider:
 
 
 class TextInput:
+    options = {
+        "border.color": (0, 0, 0),
+        "border.width": 5,
+        "background.color": (255, 255, 255),
+        "text.color": (0, 0, 0),
+        "cursor.color": (0, 0, 1)
+    }
+
     def __init__(self,
                  loc,
                  size,
-                 bg_col,
-                 border_width=5,
-                 border_col=(0, 0, 0),
                  initial_text="",
                  label="",
                  font=pygame.font.SysFont("comicsans", 35),
-                 text_col=(0, 0, 0),
-                 cursor_col=(0, 0, 1),
                  repeat_initial=400,
                  repeat_interval=35,
                  max_len=-1,
@@ -116,15 +119,15 @@ class TextInput:
 
         self.editing = editing
 
-        self.text_col = text_col
+        self.text_col = self.options["text.color"]
         self.password = password
         self.text = initial_text
         self.label = label
         self.max_len = max_len
 
         self.rect = pygame.Rect(*loc, *size)
-        self.bg_col = bg_col
-        self.border_col, self.border_width = border_col, border_width
+        self.bg_col = self.options["background.color"]
+        self.border_col, self.border_width = self.options["border.color"], self.options["border.width"]
 
         self.font = font
 
@@ -137,7 +140,7 @@ class TextInput:
 
         self.cursor_surf = pygame.Surface(
             (int(font.get_height() / 20 + 1), font.get_height()))
-        self.cursor_surf.fill(cursor_col)
+        self.cursor_surf.fill(self.options["cursor.color"])
         self.cursor_pos = len(initial_text)
         self.cursor_visible = True
         self.cursor_switch = 500
