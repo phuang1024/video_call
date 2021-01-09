@@ -19,12 +19,21 @@ import pygame
 from _constants import *
 
 
+class Text:
+    def __init__(self, text):
+        self.text = text
+
+    def draw(self, window, loc):
+        text_loc = [loc[i] - self.text.get_size()[i]//2 for i in range(2)]
+        window.blit(self.text, text_loc)
+
+
 class Button:
     def __init__(self, text):
         self.text = text
 
     def draw(self, window, events, loc, size):
-        loc = [loc[i]-size[i]//2 for i in range(2)]
+        loc = [loc[0]-size[0]//2, loc[1]]
         color = (GRAY_DARK if self.clicked(events, loc, size) else GRAY_LIGHT) if self.hovered(loc, size) else WHITE
         text_loc = [loc[i] + (size[i]-self.text.get_size()[i])//2 for i in range(2)]
 
