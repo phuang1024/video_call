@@ -15,13 +15,25 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-from _conn import Server
+import socket
+import pickle
 
 
-def main():
-    ip = input("IP Address: ")
-    server = Server(ip, 5555)
-    server.start()
+class Conn:
+    header = 65536
 
+    def __init__(self, ip, port):
+        self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.conn.connect((ip, port))
 
-main()
+    def send(self, obj):
+        data = pickle.dumps(obj)
+        length = len(data)
+        len_msg = (str(length) + " "*self.header).encode()[:self.header]
+        self.conn.send(len_msg)
+        self.conn.send(data)
+
+    def recv(self):
+        length = int(self.conn.recv(self.header))
+        data = self.conn.recv(length)
+        return pickle.loads(data)
