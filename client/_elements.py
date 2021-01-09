@@ -26,7 +26,7 @@ class Button:
     def draw(self, window, events, loc, size):
         loc = [loc[i]-size[i]//2 for i in range(2)]
         color = (GRAY_DARK if self.clicked(events, loc, size) else GRAY_LIGHT) if self.hovered(loc, size) else WHITE
-        text_loc = [loc[i] + (self.text.get_size()[i]-size[i])//2 for i in range(2)]
+        text_loc = [loc[i] + (size[i]-self.text.get_size()[i])//2 for i in range(2)]
 
         pygame.draw.rect(window, color, (*loc, *size))
         pygame.draw.rect(window, BLACK, (*loc, *size), 2)
