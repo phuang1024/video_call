@@ -34,10 +34,10 @@ class Server:
         self.server.listen()
         while True:
             conn, addr = self.server.accept()
+            print(f"[{addr[0]}] Connected")
+
             client = Client(conn, addr)
             self.clients.append(client)
-
-            print(f"[{addr[0]}] Connected")
 
 
 class Client:
@@ -47,7 +47,7 @@ class Client:
         self.conn = conn
         self.addr = addr
         self.active = True
-        self.auth()
+        threading.Thread(target=self.auth).start()
 
     def auth(self):
         test_data = str(time.time()).encode()
