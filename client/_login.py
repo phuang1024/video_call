@@ -34,5 +34,7 @@ class Login:
         self.text_header.draw(window, (width//2, height//4))
 
         if self.status == "CHOOSE":
-            self.button_join.draw(window, events, (width//2, height//2), (300, 50))
-            self.button_create.draw(window, events, (width//2, height//2+75), (300, 50))
+            if self.button_join.draw(window, events, (width//2, height//2), (300, 50)):
+                self.status = "JOIN"
+            if self.button_create.draw(window, events, (width//2, height//2+75), (300, 50)):
+                self.status = "CREATE"
