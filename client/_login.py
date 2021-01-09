@@ -17,12 +17,13 @@
 
 import pygame
 from _constants import *
-from _elements import Button
+from _elements import Button, Text
 
 
 class Login:
     def __init__(self):
         self.status = "CHOOSE"
+        self.text_header = Text(FONT_LARGE.render("Video Call", 1, BLACK))
         self.button_join = Button(FONT_MED.render("Join a meeting", 1, BLACK))
         self.button_create = Button(FONT_MED.render("Create a meeting", 1, BLACK))
 
@@ -30,6 +31,7 @@ class Login:
         width, height = window.get_size()
 
         window.fill(WHITE)
+        self.text_header.draw(window, (width//2, height//2-100))
 
         if self.status == "CHOOSE":
             self.button_join.draw(window, events, (width//2, height//2), (300, 50))
