@@ -21,7 +21,7 @@ pygame.init()
 
 
 def main():
-    pygame.display.set_caption("Piano Visualizer - App")
+    pygame.display.set_caption("Video Call")
     window = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 
     width, height = 1280, 720
