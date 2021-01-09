@@ -17,6 +17,7 @@
 
 import pygame
 from _constants import *
+from _conn import Conn
 pygame.init()
 
 
@@ -25,6 +26,7 @@ def main():
     window = pygame.display.set_mode((1280, 720))
 
     width, height = 1280, 720
+    conn = Conn(IP, 5555)
 
     resized = False
     clock = pygame.time.Clock()

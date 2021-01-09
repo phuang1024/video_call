@@ -17,6 +17,7 @@
 
 import socket
 import pickle
+from hashlib import sha256
 
 
 class Conn:
@@ -25,15 +26,22 @@ class Conn:
     def __init__(self, ip, port):
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.conn.connect((ip, port))
+        self.auth()
+
+    def auth(self):
+        test = self.recv()["test"]
+        ans = sha256(test).hexdigest()
+        self.send({"type": "auth", "ans": ans})
 
     def send(self, obj):
         data = pickle.dumps(obj)
         length = len(data)
-        len_msg = (str(length) + " "*self.header).encode()[:self.header]
+        len_msg = (str(length) + " "*self.header)[:self.header].encode()
         self.conn.send(len_msg)
         self.conn.send(data)
 
     def recv(self):
         length = int(self.conn.recv(self.header))
         data = self.conn.recv(length)
+        print(data)
         return pickle.loads(data)
