@@ -47,6 +47,7 @@ def main():
             elif event.type == pygame.VIDEORESIZE:
                 resized = True
                 width, height = event.size
+
             elif event.type == pygame.ACTIVEEVENT and resized:
                 window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
                 resized = False
