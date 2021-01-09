@@ -35,6 +35,8 @@ class Server:
             client = Client(conn, addr)
             self.clients.append(client)
 
+            print(f"Connection: {addr[0]}")
+
 
 class Client:
     header = 65536
