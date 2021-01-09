@@ -24,3 +24,5 @@ GRAY_DARK = (80, 80, 80)
 GRAY = (128, 128, 128)
 GRAY_LIGHT = (192, 192, 192)
 WHITE = (255, 255, 255)
+
+IP = input("IP address: ")
