@@ -31,7 +31,7 @@ class Login:
         width, height = window.get_size()
 
         window.fill(WHITE)
-        self.text_header.draw(window, (width//2, height//2-100))
+        self.text_header.draw(window, (width//2, height//4))
 
         if self.status == "CHOOSE":
             self.button_join.draw(window, events, (width//2, height//2), (300, 50))
