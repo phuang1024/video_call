@@ -17,6 +17,11 @@
 
 from _conn import Server
 
-ip = input("IP Address: ")
-server = Server(ip, 5555)
-server.start()
+
+def main():
+    ip = input("IP Address: ")
+    server = Server(ip, 5555)
+    server.start()
+
+
+main()
