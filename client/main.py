@@ -27,7 +27,7 @@ def main():
     window = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 
     width, height = 1280, 720
-    conn = Conn(IP, 5555)
+    #conn = Conn(IP, 5555)
 
     pages = {
         "login": Login()
