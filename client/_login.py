@@ -16,8 +16,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import pygame
-from constants import *
-from elements import Button
+from _constants import *
+from _elements import Button
 
 
 class Login:
