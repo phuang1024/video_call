@@ -36,11 +36,12 @@ class Conn:
     def send(self, obj):
         data = pickle.dumps(obj)
         length = len(data)
-        len_msg = (str(length) + " "*self.header).encode()[:self.header]
+        len_msg = (str(length) + " "*self.header)[:self.header].encode()
         self.conn.send(len_msg)
         self.conn.send(data)
 
     def recv(self):
         length = int(self.conn.recv(self.header))
         data = self.conn.recv(length)
+        print(data)
         return pickle.loads(data)
