@@ -17,6 +17,7 @@
 
 import socket
 import threading
+import pickle
 
 
 class Server:
@@ -31,3 +32,23 @@ class Server:
         self.server.listen()
         while True:
             conn, addr = self.server.accept()
+
+
+class Client:
+    header = 65536
+
+    def __init__(self, conn, addr):
+        self.conn = conn
+        self.addr = addr
+
+    def send(self, obj):
+        data = pickle.dumps(obj)
+        length = len(data)
+        len_msg = (str(length) + " "*self.header).encode()
+        self.conn.send(len_msg)
+        self.conn.send(data)
+
+    def recv(self):
+        length = int(self.conn.recv(self.header))
+        data = self.conn.recv(length)
+        return pickle.loads(length)
