@@ -18,6 +18,8 @@
 import pygame
 pygame.init()
 
+#IP = input("IP address: ")
+FPS = 60
 
 BLACK = (0, 0, 0)
 GRAY_DARK = (80, 80, 80)
@@ -25,4 +27,6 @@ GRAY = (128, 128, 128)
 GRAY_LIGHT = (192, 192, 192)
 WHITE = (255, 255, 255)
 
-IP = input("IP address: ")
+FONT_SMALL = pygame.font.SysFont("ubuntu", 14)
+FONT_MED = pygame.font.SysFont("ubuntu", 24)
+FONT_LARGE = pygame.font.SysFont("ubuntu", 36)
