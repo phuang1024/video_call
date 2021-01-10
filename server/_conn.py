@@ -35,6 +35,8 @@ class Server:
 
     def start(self, manager):
         self.server.listen()
+        print("[SERVER] Started")
+
         while True:
             conn, addr = self.server.accept()
             client = Client(conn, addr, manager)
