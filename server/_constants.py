@@ -15,15 +15,13 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-from _constants import *
-from _conn import Server
-from _manager import Manager
+import os
+import json
 
 
-def main():
-    manager = Manager()
-    server = Server(IP, 5555)
-    server.start(manager)
-
-
-main()
+if os.path.isfile("settings.json"):
+    with open("settings.json", "r") as file:
+        settings = json.load(file)
+    IP = settings["ip"]
+else:
+    IP = input("IP address: ")

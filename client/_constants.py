@@ -15,10 +15,19 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import os
+import json
 import pygame
 pygame.init()
 
-IP = input("IP address: ")
+
+if os.path.isfile("settings.json"):
+    with open("settings.json", "r") as file:
+        settings = json.load(file)
+    IP = settings["ip"]
+else:
+    IP = input("IP address: ")
+
 FPS = 60
 
 BLACK = (0, 0, 0)
