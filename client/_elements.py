@@ -33,7 +33,8 @@ class Button:
         self.text = text
 
     def draw(self, window, events, loc, size):
-        loc[0] -= loc[0]-size[0]//2
+        loc = list(loc)
+        loc[0] -= size[0]//2
 
         clicked = self.clicked(events, loc, size)
         color = (GRAY_DARK if clicked else GRAY_LIGHT) if self.hovered(loc, size) else WHITE
@@ -72,7 +73,7 @@ class TextInput:
 
     def draw(self, window, events, loc, size):
         loc = list(loc)
-        loc[0] -= loc[0]-size[0]//2
+        loc[0] -= size[0]//2
 
         clicked = self.clicked(events, loc, size)
         str_text = self.label if not self.editing and self.text == "" else self.text
