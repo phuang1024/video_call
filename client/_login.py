@@ -33,7 +33,7 @@ class Login:
         self.button_goto_join = Button(FONT_MED.render("Join a meeting", 1, BLACK))
         self.button_goto_create = Button(FONT_MED.render("Create a meeting", 1, BLACK))
         self.button_back = Button(FONT_MED.render("Back", 1, BLACK))
-        self.input_name = TextInput(FONT_MED, "Name")
+        self.input_name = TextInput(FONT_MED, "Your name")
 
         self.input_join_code = TextInput(FONT_MED, "Meeting code")
         self.input_join_pword = TextInput(FONT_MED, "Meeting password", True)
