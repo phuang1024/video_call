@@ -57,7 +57,7 @@ class Client:
         self.auth()
         self.status = "IDLE"
 
-        while True:
+        while self.active:
             msg = self.recv()
 
             if msg["type"] == "quit":
