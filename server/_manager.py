@@ -32,6 +32,12 @@ class Manager:
         self.meetings[key] = Meeting(key, host, msg)
         return key
 
+    def join_meeting(self, attend, msg):
+        for key in self.meetings:
+            if key == msg["key"]:
+                self.meetings[key].add_attendee(attend, msg["name"])
+                break
+
     def remove(self, addr):
         for key in self.meetings:
             self.meetings[key].remove(addr)
@@ -44,8 +50,8 @@ class Meeting:
         self.attendees = [(host, msg["name"])]
         self.password = msg["pword"]
 
-    def add_attendee(self, client):
-        self.attendees.append(client)
+    def add_attendee(self, client, name):
+        self.attendees.append((client, name))
 
     def get_names(self):
         return [attend[1] for attend in self.attendees]
