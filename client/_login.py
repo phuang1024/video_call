@@ -44,7 +44,10 @@ class Login:
     def create_meeting(self, conn):
         conn.send({"type": "new_meeting", "name": self.input_name.text, "pword": self.input_create_pword.text})
         self.key = conn.recv()["key"]
-        self.status = "CREATE"
+
+    def join_meeting(self, conn):
+        conn.send({"type": "join_meeting", "name": self.input_name.text,
+            "key": self.input_join_code.text, "pword": self.input_join_pword.text})
 
     def draw(self, window, events, conn):
         width, height = window.get_size()
@@ -71,6 +74,7 @@ class Login:
                 self.input_join_code.draw(window, events, (width//2, height//2+75), (300, 50))
                 self.input_join_pword.draw(window, events, (width//2, height//2+150), (300, 50))
                 if self.button_join.draw(window, events, (width//2, height//2+255), (300, 50)):
+                    self.join_meeting(conn)
                     return "waiting"
 
             elif self.status == "CREATE":
