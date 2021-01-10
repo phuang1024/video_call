@@ -57,6 +57,7 @@ class Meeting:
             "pword": self.password,
             "num_people": len(self.attendees),
         }
+        return data
 
     def remove(self, addr):
         for i, attendee in enumerate(self.attendees):
