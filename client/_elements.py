@@ -61,10 +61,11 @@ class Button:
 
 
 class TextInput:
-    def __init__(self, font, label="", password=False):
+    def __init__(self, font, label="", password=False, on_enter=None):
         self.font = font
         self.label = label
         self.password = password
+        self.on_enter = on_enter
 
         self.cursor_pos = 0
         self.text = ""
@@ -100,8 +101,12 @@ class TextInput:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 self.editing = self.hovered(loc, size)
             elif event.type == pygame.KEYDOWN and self.editing:
-                if event.key in (pygame.K_ESCAPE, pygame.K_KP_ENTER, pygame.K_RETURN, pygame.K_TAB):
+                if event.key in (pygame.K_ESCAPE, pygame.K_TAB):
                     self.editing = False
+                elif event.key in (pygame.K_KP_ENTER, pygame.K_RETURN):
+                    self.editing = False
+                    if self.on_enter is not None:
+                        self.on_enter()
 
                 else:
                     if event.key not in self.key_repeat_counters:
