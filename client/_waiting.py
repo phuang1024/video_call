@@ -30,7 +30,13 @@ class Waiting:
     def draw(self, window, events, conn):
         width, height = window.get_size()
 
+        conn.send({"type": "get", "data": "attendees"})
+        attendees = conn.recv()["data"]
+
         window.fill(WHITE)
         self.text_header.draw(window, (width//2, 50))
         self.text_attendees.draw(window, (width//3, 100))
         self.text_info.draw(window, (width//1.5, 100))
+
+        for i, attend in enumerate(attendees):
+            Text(FONT_SMALL.render(attend, 1, BLACK)).draw(window, (width//3, 150+i*30))
