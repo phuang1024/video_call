@@ -58,12 +58,17 @@ class Client:
 
         while True:
             msg = self.recv()
+
             if msg["type"] == "quit":
                 self.conn.close()
                 self.manager.remove(self.addr)
                 self.active = False
                 self.alert("INFO", "Disconnected")
                 return
+
+            elif msg["type"] == "new_meeting":
+                key = self.manager.new_meeting()
+                self.send({"type": "new_meeting", "key": key})
 
     def auth(self):
         test_data = str(time.time()).encode()
