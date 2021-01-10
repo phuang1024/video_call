@@ -25,6 +25,8 @@ class Login:
         self.status = "CHOOSE"
 
         self.text_header = Text(FONT_LARGE.render("Video Call", 1, BLACK))
+        self.text_processing = Text(FONT_MED.render("Processing...", 1, BLACK))
+
         self.button_goto_join = Button(FONT_MED.render("Join a meeting", 1, BLACK))
         self.button_goto_create = Button(FONT_MED.render("Create a meeting", 1, BLACK))
         self.button_back = Button(FONT_MED.render("Back", 1, BLACK))
@@ -47,6 +49,8 @@ class Login:
                 self.status = "JOIN"
             if self.button_goto_create.draw(window, events, (width//2, height//2+75), (300, 50)):
                 self.status = "CREATE"
+        elif self.status == "PROCESSING":
+            self.text_processing.draw(window, (width//2, height//2))
         else:
             if self.button_back.draw(window, events, (width//2, height//3), (300, 50)):
                 self.status = "CHOOSE"
