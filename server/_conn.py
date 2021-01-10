@@ -44,7 +44,6 @@ class Server:
 class Client:
     header = 64
     padding = " " * header
-    pause = 0.005
 
     def __init__(self, conn, addr, manager):
         self.conn = conn
@@ -69,6 +68,7 @@ class Client:
                 return
 
             elif msg["type"] == "new_meeting":
+                self.alert("INFO", "Created meeting")
                 key = self.manager.new_meeting()
                 self.send({"type": "new_meeting", "key": key})
 
@@ -98,8 +98,8 @@ class Client:
     def send(self, obj):
         data = pickle.dumps(obj)
         len_msg = (str(len(data)) + self.padding)[:self.header].encode()
-        self.conn.sendall(len_msg)
-        self.conn.sendall(data)
+        self.conn.send(len_msg)
+        self.conn.send(data)
 
     def recv(self):
         length = int(self.conn.recv(self.header))
