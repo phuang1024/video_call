@@ -50,4 +50,19 @@ class Waiting:
             Text(FONT_SMALL.render(attend, 1, BLACK)).draw(window, (width//3, 150+i*30))
         for i, key in enumerate(self.info):
             name = {"host": "Host", "key": "Key", "pword": "Password", "num_people": "Number of people"}[key]
-            Text(FONT_SMALL.render(f"{name}: {self.info[key]}", 1, BLACK)).draw(window, (width//1.5, 150+i*30))
+
+            if name == "Password":
+                reg_text = FONT_SMALL.render(f"Password: {self.info[key]}", 1, BLACK)
+                star_text = FONT_SMALL.render("Password: " + "*"*len(self.info[key]), 1, BLACK)
+                star_width = star_text.get_width()
+
+                y_loc = 150 + i * 30
+                x_min = width//1.5 - star_width//2
+                x_max = width//1.5 + star_width//2
+                mouse = pygame.mouse.get_pos()
+                in_text = x_min <= mouse[0] <= x_max and y_loc <= mouse[1] <= y_loc+16
+                text = reg_text if in_text else star_text
+
+                Text(text).draw(window, (width//1.5, 150+i*30))
+            else:
+                Text(FONT_SMALL.render(f"{name}: {self.info[key]}", 1, BLACK)).draw(window, (width//1.5, 150+i*30))
