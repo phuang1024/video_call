@@ -71,6 +71,11 @@ class TextInput:
         self.editing = False
         self.frame = 0
 
+        self.key_repeat_counters = {}
+        self.key_repeat_initial = 400
+        self.key_repeat_interval = 35
+        self.clock = pygame.time.Clock()
+
     def draw(self, window, events, loc, size):
         self.frame += 1
         loc = list(loc)
@@ -98,25 +103,48 @@ class TextInput:
                 if event.key in (pygame.K_ESCAPE, pygame.K_KP_ENTER, pygame.K_RETURN, pygame.K_TAB):
                     self.editing = False
 
-                elif event.key == pygame.K_LEFT:
-                    self.cursor_pos -= 1
-                elif event.key == pygame.K_RIGHT:
-                    self.cursor_pos += 1
-                elif event.key in (pygame.K_HOME, pygame.K_PAGEDOWN):
-                    self.cursor_pos = 0
-                elif event.key in (pygame.K_END, pygame.K_PAGEUP):
-                    self.cursor_pos = len(self.text)
-
-                elif event.key == pygame.K_BACKSPACE:
-                    self.text = self.text[:self.cursor_pos-1] + self.text[self.cursor_pos:]
-                    self.cursor_pos -= 1
-                elif event.key == pygame.K_DELETE:
-                    self.text = self.text[:self.cursor_pos] + self.text[self.cursor_pos+1:]
                 else:
-                    self.text = self.text[:self.cursor_pos] + event.unicode + self.text[self.cursor_pos:]
-                    self.cursor_pos += 1
+                    if event.key not in self.key_repeat_counters:
+                        self.key_repeat_counters[event.key] = [0, event.unicode]
+
+                    if event.key == pygame.K_LEFT:
+                        self.cursor_pos -= 1
+                    elif event.key == pygame.K_RIGHT:
+                        self.cursor_pos += 1
+                    elif event.key in (pygame.K_HOME, pygame.K_PAGEDOWN):
+                        self.cursor_pos = 0
+                    elif event.key in (pygame.K_END, pygame.K_PAGEUP):
+                        self.cursor_pos = len(self.text)
+
+                    elif event.key == pygame.K_BACKSPACE:
+                        self.text = self.text[:self.cursor_pos-1] + self.text[self.cursor_pos:]
+                        self.cursor_pos -= 1
+                    elif event.key == pygame.K_DELETE:
+                        self.text = self.text[:self.cursor_pos] + self.text[self.cursor_pos+1:]
+                    else:
+                        self.text = self.text[:self.cursor_pos] + event.unicode + self.text[self.cursor_pos:]
+                        self.cursor_pos += 1
 
                 self.cursor_pos = min(max(self.cursor_pos, 0), len(self.text))
+
+            elif event.type == pygame.KEYUP:
+                if event.key in self.key_repeat_counters:
+                    del self.key_repeat_counters[event.key]
+        
+        for key in self.key_repeat_counters:
+            self.key_repeat_counters[key][0] += self.clock.get_time()
+
+            if self.key_repeat_counters[key][0] >= self.key_repeat_initial:
+                self.key_repeat_counters[key][0] = (
+                    self.key_repeat_initial
+                    - self.key_repeat_interval
+                )
+
+                event_key, event_unicode = key, self.key_repeat_counters[key][1]
+                pygame.event.post(pygame.event.Event(
+                    pygame.KEYDOWN, key=event_key, unicode=event_unicode))
+
+        self.clock.tick()
 
     def hovered(self, loc, size):
         mouse = pygame.mouse.get_pos()
