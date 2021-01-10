@@ -60,6 +60,7 @@ class Client:
             msg = self.recv()
             if msg["type"] == "quit":
                 self.conn.close()
+                self.manager.remove(self.addr)
                 self.active = False
                 self.alert("INFO", "Disconnected")
                 return

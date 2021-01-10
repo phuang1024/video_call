@@ -32,6 +32,10 @@ class Manager:
         self.meetings[key] = Meeting(key)
         return key
 
+    def remove(self, addr):
+        for meeting in self.meetings:
+            meeting.remove(addr)
+
 
 class Meeting:
     def __init__(self, key):
@@ -40,3 +44,8 @@ class Meeting:
 
     def add_attendee(self, client):
         self.attendees.append(client)
+
+    def remove(self, addr):
+        for i, attendee in enumerate(self.attendees):
+            if attendee.addr == addr:
+                del self.attendees[i]
