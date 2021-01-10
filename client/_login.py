@@ -17,15 +17,24 @@
 
 import pygame
 from _constants import *
-from _elements import Button, Text
+from _elements import Button, Text, TextInput
 
 
 class Login:
     def __init__(self):
         self.status = "CHOOSE"
+
         self.text_header = Text(FONT_LARGE.render("Video Call", 1, BLACK))
-        self.button_join = Button(FONT_MED.render("Join a meeting", 1, BLACK))
-        self.button_create = Button(FONT_MED.render("Create a meeting", 1, BLACK))
+        self.button_goto_join = Button(FONT_MED.render("Join a meeting", 1, BLACK))
+        self.button_goto_create = Button(FONT_MED.render("Create a meeting", 1, BLACK))
+        self.button_back = Button(FONT_MED.render("Back", 1, BLACK))
+
+        self.input_join_code = TextInput(FONT_MED, "Meeting code")
+        self.input_join_pword = TextInput(FONT_MED, "Meeting password", True)
+        self.button_join = Button(FONT_MED.render("Join meeting", 1, BLACK))
+
+        self.input_create_pword = TextInput(FONT_MED, "Meeting password", True)
+        self.button_create = Button(FONT_MED.render("Create meeting", 1, BLACK))
 
     def draw(self, window, events):
         width, height = window.get_size()
@@ -34,7 +43,21 @@ class Login:
         self.text_header.draw(window, (width//2, height//4))
 
         if self.status == "CHOOSE":
-            if self.button_join.draw(window, events, (width//2, height//2), (300, 50)):
+            if self.button_goto_join.draw(window, events, (width//2, height//2), (300, 50)):
                 self.status = "JOIN"
-            if self.button_create.draw(window, events, (width//2, height//2+75), (300, 50)):
+            if self.button_goto_create.draw(window, events, (width//2, height//2+75), (300, 50)):
                 self.status = "CREATE"
+        else:
+            if self.button_back.draw(window, events, (width//2, height//3), (300, 50)):
+                self.status = "CHOOSE"
+                return
+            if self.status == "JOIN":
+                self.input_join_code.draw(window, events, (width//2, height//2), (300, 50))
+                self.input_join_pword.draw(window, events, (width//2, height//2+75), (300, 50))
+                if self.button_join.draw(window, events, (width//2, height//2+150), (300, 50)):
+                    pass
+            elif self.status == "CREATE":
+                Text(FONT_MED.render("Meeting code: Not implemented", 1, BLACK)).draw(window, (width//2, height//2))
+                self.input_create_pword.draw(window, events, (width//2, height//2+75), (300, 50))
+                if self.button_create.draw(window, events, (width//2, height//2+150), (300, 50)):
+                    pass
