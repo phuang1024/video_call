@@ -44,12 +44,12 @@ class Waiting:
 
         window.fill(WHITE)
         self.text_header.draw(window, (width//2, 50))
-        self.text_attendees.draw(window, (width//4, 100))
-        self.text_info.draw(window, (width//2, 100))
-        self.text_chat.draw(window, (width//(4/3), 100))
+        self.text_attendees.draw(window, (width//4, 150))
+        self.text_info.draw(window, (width//2, 150))
+        self.text_chat.draw(window, (width//(4/3), 150))
 
         for i, attend in enumerate(self.attendees):
-            Text(FONT_SMALL.render(attend, 1, BLACK)).draw(window, (width//4, 150+i*30))
+            Text(FONT_SMALL.render(attend, 1, BLACK)).draw(window, (width//4, 200+i*30))
 
         for i, key in enumerate(self.info):
             name = {"host": "Host", "key": "Key", "pword": "Password", "num_people": "Number of people"}[key]
@@ -59,15 +59,15 @@ class Waiting:
                 star_text = FONT_SMALL.render("Password: " + "*"*len(self.info[key]), 1, BLACK)
                 star_width = star_text.get_width()
 
-                y_loc = 150 + i * 30 - 8
-                x_min = width//1.5 - star_width//2 - 2
-                x_max = width//1.5 + star_width//2 + 2
+                y_loc = 200 + i * 30 - 8
+                x_min = width//2 - star_width//2 - 2
+                x_max = width//2 + star_width//2 + 2
                 mouse = pygame.mouse.get_pos()
                 in_text = x_min <= mouse[0] <= x_max and y_loc-2 <= mouse[1] <= y_loc+18
                 text = reg_text if in_text else star_text
 
-                Text(text).draw(window, (width//2, 150+i*30))
+                Text(text).draw(window, (width//2, 200+i*30))
             else:
-                Text(FONT_SMALL.render(f"{name}: {self.info[key]}", 1, BLACK)).draw(window, (width//2, 150+i*30))
+                Text(FONT_SMALL.render(f"{name}: {self.info[key]}", 1, BLACK)).draw(window, (width//2, 200+i*30))
 
         
