@@ -32,6 +32,7 @@ class Login:
         self.button_goto_join = Button(FONT_MED.render("Join a meeting", 1, BLACK))
         self.button_goto_create = Button(FONT_MED.render("Create a meeting", 1, BLACK))
         self.button_back = Button(FONT_MED.render("Back", 1, BLACK))
+        self.input_name = TextInput(FONT_MED, "Name")
 
         self.input_join_code = TextInput(FONT_MED, "Meeting code")
         self.input_join_pword = TextInput(FONT_MED, "Meeting password", True)
@@ -41,7 +42,8 @@ class Login:
         self.button_create = Button(FONT_MED.render("Create meeting", 1, BLACK))
 
     def create_meeting(self, conn):
-        conn.send({"type": "new_meeting"})
+        print(self.input_name.text)
+        conn.send({"type": "new_meeting", "name": self.input_name.text})
         self.key = conn.recv()["key"]
         self.status = "CREATE"
 
@@ -65,13 +67,16 @@ class Login:
             if self.button_back.draw(window, events, (width//2, height//3), (300, 50)):
                 self.status = "CHOOSE"
                 return
+
+            self.input_name.draw(window, events, (width//2, height//2), (300, 50))
             if self.status == "JOIN":
-                self.input_join_code.draw(window, events, (width//2, height//2), (300, 50))
-                self.input_join_pword.draw(window, events, (width//2, height//2+75), (300, 50))
-                if self.button_join.draw(window, events, (width//2, height//2+150), (300, 50)):
+                self.input_join_code.draw(window, events, (width//2, height//2+75), (300, 50))
+                self.input_join_pword.draw(window, events, (width//2, height//2+150), (300, 50))
+                if self.button_join.draw(window, events, (width//2, height//2+255), (300, 50)):
                     return "waiting"
+
             elif self.status == "CREATE":
-                Text(FONT_MED.render(f"Meeting code: {self.key}", 1, BLACK)).draw(window, (width//2, height//2))
                 self.input_create_pword.draw(window, events, (width//2, height//2+75), (300, 50))
                 if self.button_create.draw(window, events, (width//2, height//2+150), (300, 50)):
+                    self.create_meeting(conn)
                     return "waiting"
