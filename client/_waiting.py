@@ -56,11 +56,11 @@ class Waiting:
                 star_text = FONT_SMALL.render("Password: " + "*"*len(self.info[key]), 1, BLACK)
                 star_width = star_text.get_width()
 
-                y_loc = 150 + i * 30
-                x_min = width//1.5 - star_width//2
-                x_max = width//1.5 + star_width//2
+                y_loc = 150 + i * 30 - 8
+                x_min = width//1.5 - star_width//2 - 2
+                x_max = width//1.5 + star_width//2 + 2
                 mouse = pygame.mouse.get_pos()
-                in_text = x_min <= mouse[0] <= x_max and y_loc <= mouse[1] <= y_loc+16
+                in_text = x_min <= mouse[0] <= x_max and y_loc-2 <= mouse[1] <= y_loc+18
                 text = reg_text if in_text else star_text
 
                 Text(text).draw(window, (width//1.5, 150+i*30))
