@@ -15,6 +15,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import threading
 import pygame
 from _constants import *
 from _elements import Button, Text, TextInput
@@ -23,6 +24,7 @@ from _elements import Button, Text, TextInput
 class Login:
     def __init__(self):
         self.status = "CHOOSE"
+        self.key = None
 
         self.text_header = Text(FONT_LARGE.render("Video Call", 1, BLACK))
         self.text_processing = Text(FONT_MED.render("Processing...", 1, BLACK))
@@ -38,7 +40,12 @@ class Login:
         self.input_create_pword = TextInput(FONT_MED, "Meeting password", True)
         self.button_create = Button(FONT_MED.render("Create meeting", 1, BLACK))
 
-    def draw(self, window, events):
+    def create_meeting(self, conn):
+        conn.send({"type": "new_meeting"})
+        self.key = conn.recv()["key"]
+        self.status = "CREATE"
+
+    def draw(self, window, events, conn):
         width, height = window.get_size()
 
         window.fill(WHITE)
@@ -48,9 +55,12 @@ class Login:
             if self.button_goto_join.draw(window, events, (width//2, height//2), (300, 50)):
                 self.status = "JOIN"
             if self.button_goto_create.draw(window, events, (width//2, height//2+75), (300, 50)):
-                self.status = "CREATE"
+                self.status = "PROCESSING"
+                threading.Thread(target=self.create_meeting, args=(conn,)).start()
+
         elif self.status == "PROCESSING":
             self.text_processing.draw(window, (width//2, height//2))
+
         else:
             if self.button_back.draw(window, events, (width//2, height//3), (300, 50)):
                 self.status = "CHOOSE"
@@ -61,7 +71,7 @@ class Login:
                 if self.button_join.draw(window, events, (width//2, height//2+150), (300, 50)):
                     pass
             elif self.status == "CREATE":
-                Text(FONT_MED.render("Meeting code: Not implemented", 1, BLACK)).draw(window, (width//2, height//2))
+                Text(FONT_MED.render(f"Meeting code: {self.key}", 1, BLACK)).draw(window, (width//2, height//2))
                 self.input_create_pword.draw(window, events, (width//2, height//2+75), (300, 50))
                 if self.button_create.draw(window, events, (width//2, height//2+150), (300, 50)):
                     pass
