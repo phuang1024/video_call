@@ -40,10 +40,13 @@ class Manager:
         return {"status": True, "key": key}
 
     def join_meeting(self, attend, msg):
+        if msg["key"] not in self.meetings:
+            return {"status": False, "error": "Meeting code does not exist"}
+
         for key in self.meetings:
             if key == msg["key"]:
-                self.meetings[key].add_attendee(attend, msg["name"])
-                break
+                result = self.meetings[key].add_attendee(attend, msg)
+                return result
 
     def remove(self, addr):
         for key in self.meetings:
@@ -57,8 +60,14 @@ class Meeting:
         self.attendees = [(host, msg["name"])]
         self.password = msg["pword"]
 
-    def add_attendee(self, client, name):
-        self.attendees.append((client, name))
+    def add_attendee(self, client, msg):
+        if msg["name"].strip() == "":
+            return {"status": False, "error": "Please fill out your name"}
+        elif msg["pword"] != self.password:
+            return {"status": False, "error": "Invalid password"}
+
+        self.attendees.append((client, msg["name"]))
+        return {"status": True, "key": self.key}
 
     def get_names(self):
         return [attend[1] for attend in self.attendees]
