@@ -19,7 +19,10 @@ import time
 import socket
 import threading
 import pickle
+import colorama
 from hashlib import sha256
+from colorama import Fore
+colorama.init()
 
 
 class Server:
@@ -34,8 +37,6 @@ class Server:
         self.server.listen()
         while True:
             conn, addr = self.server.accept()
-            print(f"[{addr[0]}] Connected")
-
             client = Client(conn, addr)
             self.clients.append(client)
 
@@ -44,10 +45,23 @@ class Client:
     header = 65536
 
     def __init__(self, conn, addr):
+        self.alert("INFO", "Connected")
         self.conn = conn
         self.addr = addr
         self.active = True
-        threading.Thread(target=self.auth).start()
+        threading.Thread(target=self.start).start()
+
+    def start(self):
+        self.auth()
+        self.status = "IDLE"
+
+        while True:
+            msg = self.recv()
+            if msg["type"] == "quit":
+                self.conn.close()
+                self.active = False
+                self.alert("INFO", "Disconnected")
+                return
 
     def auth(self):
         test_data = str(time.time()).encode()
@@ -56,11 +70,21 @@ class Client:
         ans = self.recv()["ans"]
 
         if real_ans == ans:
-            print(f"[{self.addr[0]}] Authenticated")
+            self.alert("INFO", "Authenticated")
         else:
-            print(f"[{self.addr[0]}] Authentication failed")
+            self.alert("ERROR", "Authentication failed")
             self.conn.close()
             self.active = False
+
+    def alert(self, type, msg):
+        color = Fore.WHITE
+        if type == "INFO":
+            color = Fore.CYAN
+        elif type == "WARNING":
+            color = Fore.YELLOW
+        elif type == "ERROR":
+            color = Fore.RED
+        print(color + f"[{self.addr[0]}] " + msg + Fore.WHITE)
 
     def send(self, obj):
         data = pickle.dumps(obj)
