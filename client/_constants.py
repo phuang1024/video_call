@@ -38,6 +38,6 @@ WHITE = (255, 255, 255)
 
 RED = (240, 70, 70)
 
-FONT_SMALL = pygame.font.SysFont("ubuntu", 14)
-FONT_MED = pygame.font.SysFont("ubuntu", 20)
-FONT_LARGE = pygame.font.SysFont("ubuntu", 32)
+FONT_SMALL = pygame.font.SysFont("ubuntu", 16)
+FONT_MED = pygame.font.SysFont("ubuntu", 22)
+FONT_LARGE = pygame.font.SysFont("ubuntu", 34)
