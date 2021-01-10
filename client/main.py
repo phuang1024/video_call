@@ -27,7 +27,7 @@ def main():
     window = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 
     width, height = 1280, 720
-    # conn = Conn(IP, 5555)
+    conn = Conn(IP, 5555)
 
     pages = {
         "login": Login()
@@ -41,6 +41,7 @@ def main():
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
+                conn.send({"type": "quit"})
                 pygame.quit()
                 return
 
@@ -53,7 +54,7 @@ def main():
                 resized = False
 
         window.fill(BLACK)
-        pages["login"].draw(window, events)
+        pages["login"].draw(window, events, conn)
 
 
 main()
