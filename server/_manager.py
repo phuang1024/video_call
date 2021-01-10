@@ -24,7 +24,7 @@ class Manager:
         self.meetings = {}
 
     def new_meeting(self, host, msg):
-        get_key = lambda: "".join(random.choices(string.ascii_lowercase, k=8))
+        get_key = lambda: "".join(random.choices(string.ascii_lowercase, k=4))
         key = get_key()
         while key in self.meetings:
             key = get_key()
