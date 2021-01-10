@@ -86,6 +86,29 @@ class TextInput:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 self.editing = self.hovered(loc, size)
+            elif event.type == pygame.KEYDOWN and self.editing:
+                if event.key in (pygame.K_ESCAPE, pygame.K_KP_ENTER, pygame.K_RETURN, pygame.K_TAB):
+                    self.editing = False
+
+                elif event.key == pygame.K_LEFT:
+                    self.cursor_pos -= 1
+                elif event.key == pygame.K_RIGHT:
+                    self.cursor_pos += 1
+                elif event.key in (pygame.K_HOME, pygame.K_PAGEDOWN):
+                    self.cursor_pos = 0
+                elif event.key in (pygame.K_END, pygame.K_PAGEUP):
+                    self.cursor_pos = len(self.text)
+
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:self.cursor_pos-1] + self.text[self.cursor_pos:]
+                    self.cursor_pos -= 1
+                elif event.key == pygame.K_DELETE:
+                    self.text = self.text[:self.cursor_pos] + self.text[self.cursor_pos+1:]
+                else:
+                    self.text = self.text[:self.cursor_pos] + event.unicode + self.text[self.cursor_pos:]
+                    self.cursor_pos += 1
+
+                self.cursor_pos = min(max(self.cursor_pos, 0), len(self.text))
 
     def hovered(self, loc, size):
         mouse = pygame.mouse.get_pos()
