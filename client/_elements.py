@@ -60,8 +60,11 @@ class Button:
 
 
 class TextInput:
-    def __init__(self, font):
+    def __init__(self, font, label="", password=False):
         self.font = font
+        self.label = label
+        self.password = password
+
         self.cursor_pos = 0
         self.text = ""
         self.editing = False
@@ -72,15 +75,18 @@ class TextInput:
         loc[0] -= loc[0]-size[0]//2
 
         clicked = self.clicked(events, loc, size)
-        text = self.font.render(self.text, 1, BLACK)
+        str_text = self.label if not self.editing and self.text == "" else self.text
+        if self.password and not self.text == "":
+            str_text = "*" * len(str_text)
+        text = self.font.render(str_text, 1, BLACK)
         text_loc = [loc[i] + (size[i]-text.get_size()[i])//2 for i in range(2)]
-        cursor_x = text_loc[0] + self.font.render(self.text[:self.cursor_pos], 1, BLACK).get_width()
 
         color = GRAY_DARK if clicked else (GRAY_LIGHT if self.hovered(loc, size) and not self.editing else WHITE)
         pygame.draw.rect(window, color, (*loc, *size))
         pygame.draw.rect(window, BLACK, (*loc, *size), 2)
         window.blit(text, text_loc)
         if self.editing:
+            cursor_x = text_loc[0] + self.font.render(str_text[:self.cursor_pos], 1, BLACK).get_width()
             pygame.draw.line(window, BLACK, (cursor_x, loc[1]+10), (cursor_x, loc[1]+size[1]-10))
 
         for event in events:
