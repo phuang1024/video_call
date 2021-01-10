@@ -34,10 +34,13 @@ class Waiting:
         self.info = {}
 
     def chat_send(self):
-        pass
+        text = self.input_chat_send.text
+        if text.strip() != "":
+            self.conn.send({"type": "chat_send", "msg": text})
 
     def draw(self, window, events, conn):
         self.frame += 1
+        self.conn = conn
         width, height = window.get_size()
 
         if self.frame % 30 == 1:
@@ -45,6 +48,8 @@ class Waiting:
             self.attendees = conn.recv()["data"]
             conn.send({"type": "get", "data": "info"})
             self.info = conn.recv()["data"]
+            conn.send({"type": "get", "data": "chat"})
+            self.chat_msgs = conn.recv()["data"]
 
         window.fill(WHITE)
         self.text_header.draw(window, (width//2, 50))
