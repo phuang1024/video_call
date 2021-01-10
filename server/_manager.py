@@ -23,13 +23,13 @@ class Manager:
     def __init__(self):
         self.meetings = {}
 
-    def new_meeting(self, host):
+    def new_meeting(self, host, name):
         get_key = lambda: "".join(random.choices(string.ascii_lowercase, k=8))
         key = get_key()
         while key in self.meetings:
             key = get_key()
 
-        self.meetings[key] = Meeting(key, host)
+        self.meetings[key] = Meeting(key, host, name)
         return key
 
     def remove(self, addr):
@@ -38,15 +38,18 @@ class Manager:
 
 
 class Meeting:
-    def __init__(self, key, host):
+    def __init__(self, key, host, hostname):
         self.key = key
         self.host = host
-        self.attendees = []
+        self.attendees = [(host, hostname)]
 
     def add_attendee(self, client):
         self.attendees.append(client)
 
+    def get_names(self):
+        return [attend[1] for attend in self.attendees]
+
     def remove(self, addr):
         for i, attendee in enumerate(self.attendees):
-            if attendee.addr == addr:
+            if attendee[0].addr == addr:
                 del self.attendees[i]
