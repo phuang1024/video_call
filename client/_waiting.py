@@ -27,10 +27,14 @@ class Waiting:
         self.text_attendees = Text(FONT_MED.render("Attendees", 1, BLACK))
         self.text_info = Text(FONT_MED.render("Info", 1, BLACK))
         self.text_chat = Text(FONT_MED.render("Chat", 1, BLACK))
+        self.input_chat_send = TextInput(FONT_SMALL, "Send a message...", on_enter=self.chat_send)
 
         self.frame = 0
         self.attendees = []
         self.info = {}
+
+    def chat_send(self):
+        pass
 
     def draw(self, window, events, conn):
         self.frame += 1
@@ -46,7 +50,7 @@ class Waiting:
         self.text_header.draw(window, (width//2, 50))
         self.text_attendees.draw(window, (width//4, 150))
         self.text_info.draw(window, (width//2, 150))
-        self.text_chat.draw(window, (width//(4/3), 150))
+        self.text_chat.draw(window, (width*3/4, 150))
 
         for i, attend in enumerate(self.attendees):
             Text(FONT_SMALL.render(attend, 1, BLACK)).draw(window, (width//4, 200+i*30))
@@ -70,4 +74,4 @@ class Waiting:
             else:
                 Text(FONT_SMALL.render(f"{name}: {self.info[key]}", 1, BLACK)).draw(window, (width//2, 200+i*30))
 
-        
+        self.input_chat_send.draw(window, events, (width*3/4, height-75), (width//6, 50))
