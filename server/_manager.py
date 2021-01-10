@@ -33,8 +33,8 @@ class Manager:
         return key
 
     def remove(self, addr):
-        for meeting in self.meetings:
-            meeting.remove(addr)
+        for key in self.meetings:
+            self.meetings[key].remove(addr)
 
 
 class Meeting:
