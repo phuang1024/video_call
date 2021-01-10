@@ -27,16 +27,27 @@ class Waiting:
         self.text_attendees = Text(FONT_MED.render("Attendees", 1, BLACK))
         self.text_info = Text(FONT_MED.render("Info", 1, BLACK))
 
+        self.frame = 0
+        self.attendees = []
+        self.info = {}
+
     def draw(self, window, events, conn):
+        self.frame += 1
         width, height = window.get_size()
 
-        conn.send({"type": "get", "data": "attendees"})
-        attendees = conn.recv()["data"]
+        if self.frame % 30 == 1:
+            conn.send({"type": "get", "data": "attendees"})
+            self.attendees = conn.recv()["data"]
+            conn.send({"type": "get", "data": "info"})
+            self.info = conn.recv()["data"]
 
         window.fill(WHITE)
         self.text_header.draw(window, (width//2, 50))
         self.text_attendees.draw(window, (width//3, 100))
         self.text_info.draw(window, (width//1.5, 100))
 
-        for i, attend in enumerate(attendees):
+        for i, attend in enumerate(self.attendees):
             Text(FONT_SMALL.render(attend, 1, BLACK)).draw(window, (width//3, 150+i*30))
+        for i, key in enumerate(self.info):
+            name = {"host": "Host", "key": "Key", "pword": "Password", "num_people": "Number of people"}[key]
+            Text(FONT_SMALL.render(f"{name}: {self.info[key]}", 1, BLACK)).draw(window, (width//1.5, 150+i*30))
