@@ -59,6 +59,7 @@ class Meeting:
         self.host = host
         self.attendees = [(host, msg["name"])]
         self.password = msg["pword"]
+        self.chat = []
 
     def add_attendee(self, client, msg):
         if msg["name"].strip() == "":
