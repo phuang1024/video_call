@@ -24,13 +24,20 @@ class Manager:
         self.meetings = {}
 
     def new_meeting(self, host, msg):
+        if msg["name"].strip() == "":
+            return {"status": False, "error": "Please fill out your name"}
+        if " " in msg["pword"]:
+            return {"status": False, "error": "No spaces allowed in password"}
+        if len(msg["pword"]) <= 4:
+            return {"status": False, "error": "Password too short"}
+
         get_key = lambda: "".join(random.choices(string.ascii_lowercase, k=4))
         key = get_key()
         while key in self.meetings:
             key = get_key()
 
         self.meetings[key] = Meeting(key, host, msg)
-        return key
+        return {"status": True, "key": key}
 
     def join_meeting(self, attend, msg):
         for key in self.meetings:

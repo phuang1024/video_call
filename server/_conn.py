@@ -70,9 +70,13 @@ class Client:
 
             elif msg["type"] == "new_meeting":
                 self.alert("INFO", "Created meeting")
-                key = self.manager.new_meeting(self, msg)
-                self.meeting = self.manager.meetings[key]
-                self.send({"type": "new_meeting", "key": key})
+                result = self.manager.new_meeting(self, msg)
+                if result["status"]:
+                    key = result["key"]
+                    self.meeting = self.manager.meetings[key]
+                    self.send({"type": "new_meeting", "status": True})
+                else:
+                    self.send({"type": "new_meeting", "status": False, "error": result["error"]})
 
             elif msg["type"] == "join_meeting":
                 self.alert("INFO", "Joined meeting")
