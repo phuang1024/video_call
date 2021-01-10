@@ -23,6 +23,7 @@ from hashlib import sha256
 
 class Conn:
     header = 64
+    packet = 4096
     padding = " " * header
 
     def __init__(self, ip, port):
