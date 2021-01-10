@@ -80,6 +80,9 @@ class Client:
                     self.send({"type": "new_meeting", "status": False, "error": result["error"]})
                     self.alert("WARNING", "Failed to create meeting with error: " + result["error"])
 
+            elif msg["type"] == "chat_send":
+                self.meeting.new_chat(self, msg["msg"])
+
             elif msg["type"] == "join_meeting":
                 result = self.manager.join_meeting(self, msg)
                 if result["status"]:
@@ -95,6 +98,8 @@ class Client:
                     self.send({"type": "get", "data": self.meeting.get_names()})
                 elif msg["data"] == "info":
                     self.send({"type": "get", "data": self.meeting.get_info()})
+                elif msg["data"] == "chat":
+                    self.send({"type": "get", "data": self.meeting.chat})
 
     def auth(self):
         test_data = str(time.time()).encode()
