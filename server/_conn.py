@@ -69,7 +69,7 @@ class Client:
 
             elif msg["type"] == "new_meeting":
                 self.alert("INFO", "Created meeting")
-                key = self.manager.new_meeting()
+                key = self.manager.new_meeting(self)
                 self.send({"type": "new_meeting", "key": key})
 
     def auth(self):
