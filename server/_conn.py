@@ -69,19 +69,24 @@ class Client:
                 return
 
             elif msg["type"] == "new_meeting":
-                self.alert("INFO", "Created meeting")
                 result = self.manager.new_meeting(self, msg)
                 if result["status"]:
-                    key = result["key"]
-                    self.meeting = self.manager.meetings[key]
+                    self.meeting = self.manager.meetings[result["key"]]
                     self.send({"type": "new_meeting", "status": True})
+                    self.alert("INFO", "Created meeting")
                 else:
                     self.send({"type": "new_meeting", "status": False, "error": result["error"]})
+                    self.alert("WARNING", "Failed to create meeting with error " + result["error"])
 
             elif msg["type"] == "join_meeting":
-                self.alert("INFO", "Joined meeting")
-                self.manager.join_meeting(self, msg)
-                self.meeting = self.manager.meetings[msg["key"]]
+                result = self.manager.join_meeting(self, msg)
+                if result["status"]:
+                    self.meeting = self.manager.meetings[result["key"]]
+                    self.send({"type": "join_meeting", "status": True})
+                    self.alert("INFO", "Joined meeting")
+                else:
+                    self.send({"type": "join_meeting", "status": False, "error": result["error"]})
+                    self.alert("WARNING", "Failed to join meeting with error " + result["error"])
 
             elif msg["type"] == "get":
                 if msg["data"] == "attendees":
