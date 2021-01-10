@@ -45,11 +45,11 @@ class Client:
     header = 65536
 
     def __init__(self, conn, addr, manager):
-        self.alert("INFO", "Connected")
         self.conn = conn
         self.addr = addr
         self.manager = manager
         self.active = True
+        self.alert("INFO", "Connected")
         threading.Thread(target=self.start).start()
 
     def start(self):
