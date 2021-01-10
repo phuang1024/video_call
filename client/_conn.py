@@ -15,6 +15,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import time
 import socket
 import pickle
 from hashlib import sha256
@@ -23,6 +24,7 @@ from hashlib import sha256
 class Conn:
     header = 65536
     padding = " " * header
+    pause = 0.005
 
     def __init__(self, ip, port):
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -39,9 +41,13 @@ class Conn:
         length = len(data)
         len_msg = (str(length) + self.padding)[:self.header].encode()
         self.conn.send(len_msg)
+        time.sleep(self.pause)
         self.conn.send(data)
+        time.sleep(self.pause)
 
     def recv(self):
         length = int(self.conn.recv(self.header))
+        time.sleep(self.pause)
         data = self.conn.recv(length)
+        time.sleep(self.pause)
         return pickle.loads(data)
