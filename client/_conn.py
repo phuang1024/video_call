@@ -22,6 +22,7 @@ from hashlib import sha256
 
 class Conn:
     header = 65536
+    padding = " " * header
 
     def __init__(self, ip, port):
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,7 +37,7 @@ class Conn:
     def send(self, obj):
         data = pickle.dumps(obj)
         length = len(data)
-        len_msg = (str(length) + " "*self.header)[:self.header].encode()
+        len_msg = (str(length) + self.padding)[:self.header].encode()
         self.conn.send(len_msg)
         self.conn.send(data)
 

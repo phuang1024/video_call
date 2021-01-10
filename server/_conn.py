@@ -43,6 +43,7 @@ class Server:
 
 class Client:
     header = 65536
+    padding = " " * header
 
     def __init__(self, conn, addr, manager):
         self.conn = conn
@@ -96,7 +97,7 @@ class Client:
     def send(self, obj):
         data = pickle.dumps(obj)
         length = len(data)
-        len_msg = (str(length) + " "*self.header)[:self.header].encode()
+        len_msg = (str(length) + self.padding)[:self.header].encode()
         self.conn.send(len_msg)
         self.conn.send(data)
 
