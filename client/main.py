@@ -19,6 +19,7 @@ import pygame
 from _constants import *
 from _conn import Conn
 from _login import Login
+from _waiting import Waiting
 pygame.init()
 
 
@@ -29,8 +30,10 @@ def main():
     width, height = 1280, 720
     conn = Conn(IP, 5555)
 
+    page = "login"
     pages = {
-        "login": Login()
+        "login": Login(),
+        "waiting": Waiting(),
     }
 
     resized = False
@@ -54,7 +57,9 @@ def main():
                 resized = False
 
         window.fill(BLACK)
-        pages["login"].draw(window, events, conn)
+        result = pages[page].draw(window, events, conn)
+        if result is not None:
+            page = result
 
 
 main()

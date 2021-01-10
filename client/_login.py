@@ -69,9 +69,9 @@ class Login:
                 self.input_join_code.draw(window, events, (width//2, height//2), (300, 50))
                 self.input_join_pword.draw(window, events, (width//2, height//2+75), (300, 50))
                 if self.button_join.draw(window, events, (width//2, height//2+150), (300, 50)):
-                    pass
+                    return "waiting"
             elif self.status == "CREATE":
                 Text(FONT_MED.render(f"Meeting code: {self.key}", 1, BLACK)).draw(window, (width//2, height//2))
                 self.input_create_pword.draw(window, events, (width//2, height//2+75), (300, 50))
                 if self.button_create.draw(window, events, (width//2, height//2+150), (300, 50)):
-                    pass
+                    return "waiting"
