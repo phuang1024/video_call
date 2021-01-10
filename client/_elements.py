@@ -106,6 +106,7 @@ class TextInput:
                 elif event.key in (pygame.K_KP_ENTER, pygame.K_RETURN):
                     self.editing = False
                     if self.on_enter is not None:
+                        self.editing = True
                         self.on_enter()
                         self.text = ""
 
