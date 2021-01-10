@@ -141,8 +141,7 @@ class TextInput:
                 )
 
                 event_key, event_unicode = key, self.key_repeat_counters[key][1]
-                pygame.event.post(pygame.event.Event(
-                    pygame.KEYDOWN, key=event_key, unicode=event_unicode))
+                pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=event_key, unicode=event_unicode))
 
         self.clock.tick()
 
