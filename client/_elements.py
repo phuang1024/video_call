@@ -107,6 +107,7 @@ class TextInput:
                     self.editing = False
                     if self.on_enter is not None:
                         self.on_enter()
+                        self.text = ""
 
                 else:
                     if event.key not in self.key_repeat_counters:
