@@ -29,7 +29,14 @@ class Manager:
         while key in self.meetings:
             key = get_key()
 
-        self.meetings[key] = Meeting()
+        self.meetings[key] = Meeting(key)
         return key
 
 
+class Meeting:
+    def __init__(self, key):
+        self.key = key
+        self.attendees = []
+
+    def add_attendee(self, client):
+        self.attendees.append(client)
