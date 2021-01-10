@@ -72,6 +72,7 @@ class TextInput:
         self.frame = 0
 
     def draw(self, window, events, loc, size):
+        self.frame += 1
         loc = list(loc)
         loc[0] -= size[0]//2
 
@@ -86,9 +87,9 @@ class TextInput:
         pygame.draw.rect(window, color, (*loc, *size))
         pygame.draw.rect(window, BLACK, (*loc, *size), 2)
         window.blit(text, text_loc)
-        if self.editing:
+        if self.editing and (self.frame//30) % 2 == 0:
             cursor_x = text_loc[0] + self.font.render(str_text[:self.cursor_pos], 1, BLACK).get_width()
-            pygame.draw.line(window, BLACK, (cursor_x, loc[1]+10), (cursor_x, loc[1]+size[1]-10))
+            pygame.draw.line(window, BLACK, (cursor_x, loc[1]+12), (cursor_x, loc[1]+size[1]-12))
 
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
