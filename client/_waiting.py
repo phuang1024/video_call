@@ -52,7 +52,7 @@ class Waiting:
         self.conn = conn
         width, height = window.get_size()
 
-        if self.frame % 60 == 1:
+        if self.frame % 20 == 1:
             threading.Thread(target=self.get_info, args=(conn,)).start()
 
         window.fill(WHITE)
@@ -84,3 +84,6 @@ class Waiting:
                 Text(FONT_SMALL.render(f"{name}: {self.info[key]}", 1, BLACK)).draw(window, (width//2, 200+i*30))
 
         self.input_chat_send.draw(window, events, (width*3/4, height-75), (width//6, 50))
+        for i, msg in enumerate(self.chat_msgs):
+            person, string = msg
+            Text(FONT_SMALL.render(f"{person}: {string}", 1, BLACK)).draw(window, (width*3/4, 200+i*30))
