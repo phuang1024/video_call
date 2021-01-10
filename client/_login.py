@@ -25,6 +25,7 @@ class Login:
     def __init__(self):
         self.status = "CHOOSE"
         self.key = None
+        self.error_msg = None
 
         self.text_header = Text(FONT_LARGE.render("Video Call", 1, BLACK))
         self.text_processing = Text(FONT_MED.render("Processing...", 1, BLACK))
@@ -43,7 +44,10 @@ class Login:
 
     def create_meeting(self, conn):
         conn.send({"type": "new_meeting", "name": self.input_name.text, "pword": self.input_create_pword.text})
-        self.key = conn.recv()["key"]
+        result = conn.recv()
+        if not result["status"]:
+            self.error_msg = result["error"]
+        return result["status"]
 
     def join_meeting(self, conn):
         conn.send({"type": "join_meeting", "name": self.input_name.text,
@@ -53,7 +57,9 @@ class Login:
         width, height = window.get_size()
 
         window.fill(WHITE)
-        self.text_header.draw(window, (width//2, height//4))
+        self.text_header.draw(window, (width//2, height//5))
+        if self.error_msg is not None:
+            Text(FONT_MED.render(self.error_msg, 1, RED)).draw(window, (width//2, height//5+50))
 
         if self.status == "CHOOSE":
             if self.button_goto_join.draw(window, events, (width//2, height//2), (300, 50)):
@@ -80,5 +86,6 @@ class Login:
             elif self.status == "CREATE":
                 self.input_create_pword.draw(window, events, (width//2, height//2+75), (300, 50))
                 if self.button_create.draw(window, events, (width//2, height//2+150), (300, 50)):
-                    self.create_meeting(conn)
-                    return "waiting"
+                    status = self.create_meeting(conn)
+                    if status:
+                        return "waiting"
