@@ -69,13 +69,15 @@ class Client:
 
             elif msg["type"] == "new_meeting":
                 self.alert("INFO", "Created meeting")
-                key = self.manager.new_meeting(self, msg["name"])
+                key = self.manager.new_meeting(self, msg)
                 self.meeting = self.manager.meetings[key]
                 self.send({"type": "new_meeting", "key": key})
 
             elif msg["type"] == "get":
                 if msg["data"] == "attendees":
                     self.send({"type": "get", "data": self.meeting.get_names()})
+                elif msg["data"] == "info":
+                    self.send({"type": "get", "data": self.meeting.get_info()})
 
     def auth(self):
         test_data = str(time.time()).encode()
