@@ -42,7 +42,7 @@ class Server:
 
 
 class Client:
-    header = 65536
+    header = 64
     padding = " " * header
     pause = 0.005
 
@@ -97,16 +97,11 @@ class Client:
 
     def send(self, obj):
         data = pickle.dumps(obj)
-        length = len(data)
-        len_msg = (str(length) + self.padding)[:self.header].encode()
-        self.conn.send(len_msg)
-        time.sleep(self.pause)
-        self.conn.send(data)
-        time.sleep(self.pause)
+        len_msg = (str(len(data)) + self.padding)[:self.header].encode()
+        self.conn.sendall(len_msg)
+        self.conn.sendall(data)
 
     def recv(self):
         length = int(self.conn.recv(self.header))
-        time.sleep(self.pause)
         data = self.conn.recv(length)
-        time.sleep(self.pause)
         return pickle.loads(data)
