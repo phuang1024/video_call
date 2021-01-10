@@ -33,21 +33,22 @@ class Server:
         self.server.bind((ip, port))
         self.clients = []
 
-    def start(self):
+    def start(self, manager):
         self.server.listen()
         while True:
             conn, addr = self.server.accept()
-            client = Client(conn, addr)
+            client = Client(conn, addr, manager)
             self.clients.append(client)
 
 
 class Client:
     header = 65536
 
-    def __init__(self, conn, addr):
+    def __init__(self, conn, addr, manager):
         self.alert("INFO", "Connected")
         self.conn = conn
         self.addr = addr
+        self.manager = manager
         self.active = True
         threading.Thread(target=self.start).start()
 
@@ -84,7 +85,7 @@ class Client:
             color = Fore.YELLOW
         elif type == "ERROR":
             color = Fore.RED
-        print(color + f"[{self.addr[0]}] " + msg + Fore.WHITE)
+        print(color + f"[{self.addr}] " + msg + Fore.WHITE)
 
     def send(self, obj):
         data = pickle.dumps(obj)

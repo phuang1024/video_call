@@ -16,12 +16,14 @@
 # ##### END GPL LICENSE BLOCK #####
 
 from _conn import Server
+from _manager import Manager
 
 
 def main():
     ip = input("IP Address: ")
+    manager = Manager()
     server = Server(ip, 5555)
-    server.start()
+    server.start(manager)
 
 
 main()
