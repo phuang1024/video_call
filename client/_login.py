@@ -42,8 +42,7 @@ class Login:
         self.button_create = Button(FONT_MED.render("Create meeting", 1, BLACK))
 
     def create_meeting(self, conn):
-        print(self.input_name.text)
-        conn.send({"type": "new_meeting", "name": self.input_name.text})
+        conn.send({"type": "new_meeting", "name": self.input_name.text, "pword": self.input_create_pword.text})
         self.key = conn.recv()["key"]
         self.status = "CREATE"
 
@@ -57,8 +56,7 @@ class Login:
             if self.button_goto_join.draw(window, events, (width//2, height//2), (300, 50)):
                 self.status = "JOIN"
             if self.button_goto_create.draw(window, events, (width//2, height//2+75), (300, 50)):
-                self.status = "PROCESSING"
-                threading.Thread(target=self.create_meeting, args=(conn,)).start()
+                self.status = "CREATE"
 
         elif self.status == "PROCESSING":
             self.text_processing.draw(window, (width//2, height//2))
