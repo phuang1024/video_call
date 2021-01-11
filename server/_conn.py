@@ -81,7 +81,7 @@ class Client:
                     self.alert("WARNING", "Failed to create meeting with error: " + result["error"])
 
             elif msg["type"] == "chat_send":
-                self.meeting.new_chat(self, msg["msg"])
+                self.meeting.new_chat_msg(self, msg["msg"])
 
             elif msg["type"] == "join_meeting":
                 result = self.manager.join_meeting(self, msg)

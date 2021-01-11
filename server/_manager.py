@@ -73,7 +73,7 @@ class Meeting:
     def get_names(self):
         return [attend[1] for attend in self.attendees]
 
-    def new_chat(self, client, msg):
+    def new_chat_msg(self, client, msg):
         name = "Unknown"
         for attend in self.attendees:
             if attend[0] == client:
