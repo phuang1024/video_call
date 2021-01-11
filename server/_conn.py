@@ -16,7 +16,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import time
-from datetime import datetime
 import socket
 import threading
 import pickle
@@ -46,8 +45,8 @@ class Server:
 
 class Client:
     header = 64
-    packet_size = 1024
     padding = " " * header
+    packet_size = 1024
 
     def __init__(self, conn, addr, manager):
         self.conn = conn
@@ -83,8 +82,7 @@ class Client:
                         self.alert("WARNING", "Failed to create meeting with error: " + result["error"])
 
                 elif msg["type"] == "chat_send":
-                    curr_time = datetime.now().strftime("%I:%M %p")
-                    self.meeting.new_chat_msg(self, msg["msg"], curr_time)
+                    self.meeting.new_chat_msg(self, msg["msg"])
 
                 elif msg["type"] == "join_meeting":
                     result = self.manager.join_meeting(self, msg)
@@ -103,11 +101,14 @@ class Client:
                         self.send({"type": "get", "data": self.meeting.get_info()})
                     elif msg["data"] == "chat":
                         self.send({"type": "get", "data": self.meeting.chat})
+                    elif msg["data"] == "is_host":
+                        self.send({"type": "get", "data": self.meeting.is_host(self)})
 
             except Exception as e:
                 e = str(e)
                 error_msg = e if len(e) < 25 else e[:25] + "..."
                 self.alert("ERROR", f"Error in processing msg (catched): {error_msg}")
+                return {"type": None}
 
     def auth(self):
         test_data = str(time.time()).encode()

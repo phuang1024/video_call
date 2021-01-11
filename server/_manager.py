@@ -76,14 +76,14 @@ class Meeting:
     def get_names(self):
         return [attend[1] for attend in self.attendees]
 
-    def new_chat_msg(self, client, msg, time):
+    def new_chat_msg(self, client, msg):
         name = "Unknown"
         for attend in self.attendees:
             if attend[0] is client:
                 name = attend[1]
                 break
 
-        self.chat.append((name, msg, time))
+        self.chat.append((name, msg))
 
     def get_info(self):
         data = {
