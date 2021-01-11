@@ -66,7 +66,7 @@ class Waiting:
             except KeyError:
                 return
 
-    def draw(self, window, events):
+    def draw(self, window, events, conn):
         if not self.get_data_started:
             threading.Thread(target=self.get_info).start()
             self.get_data_started = True
