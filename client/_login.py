@@ -45,6 +45,10 @@ class Login:
     def create_meeting(self, conn):
         conn.send({"type": "new_meeting", "name": self.input_name.text, "pword": self.input_create_pword.text})
         result = conn.recv()
+        if result["type"] is None:
+            self.create_meeting(conn)
+            return
+
         if not result["status"]:
             self.error_msg = result["error"]
         return result["status"]
@@ -53,6 +57,10 @@ class Login:
         conn.send({"type": "join_meeting", "name": self.input_name.text,
             "key": self.input_join_code.text, "pword": self.input_join_pword.text})
         result = conn.recv()
+        if result["type"] is None:
+            self.join_meeting(conn)
+            return
+
         if not result["status"]:
             self.error_msg = result["error"]
         return result["status"]

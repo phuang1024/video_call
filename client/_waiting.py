@@ -47,12 +47,15 @@ class Waiting:
         self.chat_sending = False
 
     def get_info(self, conn):
-        conn.send({"type": "get", "data": "attendees"})
-        self.attendees = conn.recv()["data"]
-        conn.send({"type": "get", "data": "info"})
-        self.info = conn.recv()["data"]
-        conn.send({"type": "get", "data": "chat"})
-        self.chat_msgs = conn.recv()["data"]
+        try:
+            conn.send({"type": "get", "data": "attendees"})
+            self.attendees = conn.recv()["data"]
+            conn.send({"type": "get", "data": "info"})
+            self.info = conn.recv()["data"]
+            conn.send({"type": "get", "data": "chat"})
+            self.chat_msgs = conn.recv()["data"]
+        except KeyError:
+            return
 
     def draw(self, window, events, conn):
         self.frame += 1
