@@ -73,3 +73,11 @@ class Conn:
             error_msg = e if len(e) < 25 else e[:25] + "..."
             print(Fore.RED + f"Error in recv (catched): {error_msg}" + Fore.WHITE)
             return {"type": None}
+
+
+def encrypt(msg):
+    return reversed(msg[1:] + msg[0])
+
+
+def decrypt(msg):
+    return reversed(msg)[-1] + reversed(msg)[:-1]
