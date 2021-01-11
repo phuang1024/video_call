@@ -135,8 +135,9 @@ class Client:
             length = int(self.conn.recv(self.header))
             data = self.conn.recv(length)
             return pickle.loads(data)
+
         except Exception as e:
             e = str(e)
             error_msg = e if len(e) < 25 else e[:25] + "..."
-            print(Fore.RED + f"Error in recv: {error_msg}" + Fore.WHITE)
+            print(Fore.RED + f"Error in recv (catched): {error_msg}" + Fore.WHITE)
             return {"type": None}
