@@ -33,7 +33,7 @@ def main():
     page = "login"
     pages = {
         "login": Login(),
-        "waiting": Waiting(),
+        "waiting": Waiting(conn),
     }
 
     resized = False
@@ -44,6 +44,8 @@ def main():
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
+                for key in pages:
+                    pages[key].active = False
                 conn.send({"type": "quit"})
                 pygame.quit()
                 return
