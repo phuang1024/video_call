@@ -15,6 +15,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import time
 import threading
 import pygame
 from _constants import *
@@ -33,11 +34,17 @@ class Waiting:
         self.attendees = []
         self.chat_msgs = []
         self.info = {}
+        self.chat_sending = False
 
     def chat_send(self):
+        while self.chat_sending:
+            time.sleep(0.01)
+
+        self.chat_sending = True
         text = self.input_chat_send.text
         if text.strip() != "":
             self.conn.send({"type": "chat_send", "msg": text})
+        self.chat_sending = False
 
     def get_info(self, conn):
         conn.send({"type": "get", "data": "attendees"})
