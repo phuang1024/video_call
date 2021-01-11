@@ -137,16 +137,12 @@ class TextInput:
             elif event.type == pygame.KEYUP:
                 if event.key in self.key_repeat_counters:
                     del self.key_repeat_counters[event.key]
-        
+
         for key in self.key_repeat_counters:
             self.key_repeat_counters[key][0] += self.clock.get_time()
 
             if self.key_repeat_counters[key][0] >= self.key_repeat_initial:
-                self.key_repeat_counters[key][0] = (
-                    self.key_repeat_initial
-                    - self.key_repeat_interval
-                )
-
+                self.key_repeat_counters[key][0] = self.key_repeat_initial - self.key_repeat_interval
                 event_key, event_unicode = key, self.key_repeat_counters[key][1]
                 pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=event_key, unicode=event_unicode))
 
