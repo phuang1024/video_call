@@ -35,7 +35,7 @@ class Server:
 
     def start(self, manager):
         self.server.listen()
-        print(Fore.GREEN + "[SERVER] Started" + Fore.WHITE)
+        print(Fore.GREEN + f"[SERVER] Started, ip: {self.ip}, port: {self.port}" + Fore.WHITE)
 
         while True:
             conn, addr = self.server.accept()
