@@ -82,8 +82,7 @@ class Client:
                     self.alert("WARNING", "Failed to create meeting with error: " + result["error"])
 
             elif msg["type"] == "chat_send":
-                curr_time = datetime.now()
-                curr_time = curr_time.strftime("%I:%M %p")
+                curr_time = datetime.now().strftime("%I:%M %p")
                 self.meeting.new_chat_msg(self, msg["msg"], curr_time)
 
             elif msg["type"] == "join_meeting":
