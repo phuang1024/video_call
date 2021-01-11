@@ -16,6 +16,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import time
+from datetime import datetime
 import socket
 import threading
 import pickle
@@ -81,7 +82,9 @@ class Client:
                     self.alert("WARNING", "Failed to create meeting with error: " + result["error"])
 
             elif msg["type"] == "chat_send":
-                self.meeting.new_chat_msg(self, msg["msg"])
+                curr_time = datetime.now()
+                curr_time = curr_time.strftime("%I:%M %p")
+                self.meeting.new_chat_msg(self, msg["msg"], curr_time)
 
             elif msg["type"] == "join_meeting":
                 result = self.manager.join_meeting(self, msg)

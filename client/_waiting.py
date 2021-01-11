@@ -95,5 +95,7 @@ class Waiting:
 
         self.input_chat_send.draw(window, events, (width*3/4, height-75), (width//6, 50))
         for i, msg in enumerate(self.chat_msgs):
-            person, string = msg
-            Text(FONT_SMALL.render(f"{person}: {string}", 1, BLACK)).draw(window, (width*3/4, 200+i*30))
+            person, string, time = msg
+            long_msg = FONT_SMALL.render(f"{person}: {string}", 1, BLACK)
+            Text(long_msg).draw(window, (width*3/4, 200+i*30))
+            Text(FONT_XSMALL.render(time, 1, GRAY_LIGHT)).draw(window, (width*3/4 + long_msg.get_width()/2 + 3, 195+i*30))
