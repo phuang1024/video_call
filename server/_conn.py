@@ -20,6 +20,7 @@ import socket
 import threading
 import pickle
 import colorama
+from zlib import compress, decompress
 from hashlib import sha256
 from colorama import Fore
 colorama.init()
@@ -106,7 +107,7 @@ class Client:
 
             except Exception as e:
                 e = str(e)
-                error_msg = e if len(e) < 25 else e[:25] + "..."
+                error_msg = e if len(e) < 50 else e[:50] + "..."
                 self.alert("ERROR", f"Error in processing msg (catched): {error_msg}")
                 return {"type": None}
 
@@ -165,14 +166,14 @@ class Client:
 
         except Exception as e:
             e = str(e)
-            error_msg = e if len(e) < 25 else e[:25] + "..."
+            error_msg = e if len(e) < 50 else e[:50] + "..."
             print(Fore.RED + f"Error in recv (catched): {error_msg}" + Fore.WHITE)
             return {"type": None}
 
 
 def encrypt(msg):
-    return msg
+    return compress(msg)
 
 
 def decrypt(msg):
-    return msg
+    return decompress(msg)
