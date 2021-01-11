@@ -32,6 +32,7 @@ class Conn:
     def __init__(self, ip, port):
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.conn.connect((ip, port))
+        print(Fore.CYAN + "Connected to server" + Fore.WHITE)
         self.auth()
 
     def auth(self):
