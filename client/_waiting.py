@@ -59,7 +59,7 @@ class Waiting:
         self.conn = conn
         width, height = window.get_size()
 
-        if self.frame % 20 == 1:
+        if self.frame % 40 == 1:
             threading.Thread(target=self.get_info, args=(conn,)).start()
 
         window.fill(WHITE)
