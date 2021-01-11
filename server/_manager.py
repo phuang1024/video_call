@@ -57,10 +57,11 @@ class Manager:
 class Meeting:
     def __init__(self, key, host, msg):
         self.key = key
-        self.host = host
+
         self.attendees = [(host, msg["name"])]
         self.password = msg["pword"]
         self.chat = []
+        self.chat_prev_time = None
 
     def add_attendee(self, client, msg):
         if msg["name"].strip() == "":
@@ -79,6 +80,11 @@ class Meeting:
 
     def new_chat_msg(self, client, msg):
         time = datetime.now().strftime("%I:%M %p")
+        if time == self.chat_prev_time:
+            time = ""
+        else:
+            self.chat_prev_time = time
+
         name = "Unknown"
         for attend in self.attendees:
             if attend[0] is client:
