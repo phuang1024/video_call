@@ -26,7 +26,7 @@ colorama.init()
 
 class Conn:
     header = 64
-    packet = 4096
+    packet_size = 1024
     padding = " " * header
 
     def __init__(self, ip, port):
@@ -43,16 +43,33 @@ class Conn:
     def send(self, obj):
         data = pickle.dumps(obj)
         len_msg = (str(len(data)) + self.padding)[:self.header].encode()
+
+        packets = []
+        while data:
+            curr_len = min(len(data), self.packet_size)
+            packets.append(data[:curr_len])
+            data = data[curr_len:]
+
         self.conn.send(len_msg)
-        self.conn.send(data)
+        for packet in packets:
+            self.conn.send(packet)
 
     def recv(self):
         try:
             length = int(self.conn.recv(self.header))
-            data = self.conn.recv(length)
+
+            packet_sizes = [self.packet_size] * (length//self.packet_size)
+            if (remain := (length % self.packet_size)) != 0:
+                packet_sizes.append(remain)
+
+            data = b""
+            for size in packet_sizes:
+                data += self.conn.recv(size)
+
             return pickle.loads(data)
+
         except Exception as e:
             e = str(e)
             error_msg = e if len(e) < 25 else e[:25] + "..."
-            print(Fore.RED + f"Error in recv: {error_msg}" + Fore.WHITE)
+            print(Fore.RED + f"Error in recv (catched): {error_msg}" + Fore.WHITE)
             return {"type": None}
