@@ -155,5 +155,5 @@ class Client:
         except Exception as e:
             e = str(e)
             error_msg = e if len(e) < 25 else e[:25] + "..."
-            print(Fore.RED + f"Error in recv (catched): {error_msg}" + Fore.WHITE)
+            self.alert("ERROR", f"Error in recv (catched): {error_msg}")
             return {"type": None}
