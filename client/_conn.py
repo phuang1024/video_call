@@ -42,6 +42,7 @@ class Conn:
 
     def send(self, obj):
         data = pickle.dumps(obj)
+        data = encrypt(data)
         len_msg = (str(len(data)) + self.padding)[:self.header].encode()
 
         packets = []
@@ -66,6 +67,7 @@ class Conn:
             for size in packet_sizes:
                 data += self.conn.recv(size)
 
+            data = decrypt(data)
             return pickle.loads(data)
 
         except Exception as e:

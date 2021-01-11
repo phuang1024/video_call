@@ -135,6 +135,7 @@ class Client:
 
     def send(self, obj):
         data = pickle.dumps(obj)
+        data = encrypt(data)
         len_msg = (str(len(data)) + self.padding)[:self.header].encode()
 
         packets = []
@@ -159,10 +160,19 @@ class Client:
             for size in packet_sizes:
                 data += self.conn.recv(size)
 
+            data = decrypt(data)
             return pickle.loads(data)
 
         except Exception as e:
             e = str(e)
             error_msg = e if len(e) < 25 else e[:25] + "..."
-            self.alert("ERROR", f"Error in recv (catched): {error_msg}")
+            print(Fore.RED + f"Error in recv (catched): {error_msg}" + Fore.WHITE)
             return {"type": None}
+
+
+def encrypt(msg):
+    return reversed(msg[1:] + msg[0])
+
+
+def decrypt(msg):
+    return reversed(msg)[-1] + reversed(msg)[:-1]
