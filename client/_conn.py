@@ -52,5 +52,6 @@ class Conn:
             data = self.conn.recv(length)
             return pickle.loads(data)
         except Exception as e:
-            print(Fore.RED + f"Error in recv: {e}" + Fore.WHITE)
+            error_msg = str(e) if len(e) < 25 else str(e[:25]) + "..."
+            print(Fore.RED + f"Error in recv: {error_msg}" + Fore.WHITE)
             return {"type": None}
