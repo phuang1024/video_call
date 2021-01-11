@@ -100,6 +100,8 @@ class Client:
                     self.send({"type": "get", "data": self.meeting.get_info()})
                 elif msg["data"] == "chat":
                     self.send({"type": "get", "data": self.meeting.chat})
+                elif msg["data"] == "is_host":
+                    self.send({"type": "get", "data": self.meeting.is_host(self)})
 
     def auth(self):
         test_data = str(time.time()).encode()
