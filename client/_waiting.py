@@ -31,10 +31,12 @@ class Waiting:
         self.input_chat_send = TextInput(FONT_SMALL, "Send a message...", on_enter=self.chat_send)
 
         self.frame = 0
-        self.attendees = []
-        self.chat_msgs = []
-        self.info = {}
         self.chat_sending = False
+
+        self.attendees = []
+        self.info = {}
+        self.chat_msgs = []
+        self.is_host = False
 
     def chat_send(self):
         while self.chat_sending:
@@ -54,6 +56,9 @@ class Waiting:
             self.info = conn.recv()["data"]
             conn.send({"type": "get", "data": "chat"})
             self.chat_msgs = conn.recv()["data"]
+            conn.send({"type": "get", "data": "is_host"})
+            self.is_host = conn.recv()["data"]
+
         except KeyError:
             return
 
@@ -76,10 +81,11 @@ class Waiting:
 
         for i, key in enumerate(self.info):
             name = {"host": "Host", "key": "Key", "pword": "Password", "num_people": "Number of people"}[key]
+            info = self.info[key]
 
             if name == "Password":
-                reg_text = FONT_SMALL.render(f"Password: {self.info[key]}", 1, BLACK)
-                star_text = FONT_SMALL.render("Password: " + "*"*len(self.info[key]), 1, BLACK)
+                reg_text = FONT_SMALL.render(f"Password: {info}", 1, BLACK)
+                star_text = FONT_SMALL.render("Password: " + "*"*len(info), 1, BLACK)
                 star_width = star_text.get_width()
 
                 y_loc = 200 + i * 30 - 8
@@ -90,8 +96,11 @@ class Waiting:
                 text = reg_text if in_text else star_text
 
                 Text(text).draw(window, (width//2, 200+i*30))
+
             else:
-                Text(FONT_SMALL.render(f"{name}: {self.info[key]}", 1, BLACK)).draw(window, (width//2, 200+i*30))
+                if name == "Host" and self.is_host:
+                    name += " (You)"
+                Text(FONT_SMALL.render(f"{name}: {info}", 1, BLACK)).draw(window, (width//2, 200+i*30))
 
         self.input_chat_send.draw(window, events, (width*3/4, height-75), (width//6, 50))
         for i, msg in enumerate(self.chat_msgs):
