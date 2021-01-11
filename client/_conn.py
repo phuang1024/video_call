@@ -43,8 +43,16 @@ class Conn:
     def send(self, obj):
         data = pickle.dumps(obj)
         len_msg = (str(len(data)) + self.padding)[:self.header].encode()
+
+        packets = []
+        while data:
+            curr_len = min(len(data), self.packet)
+            packets.append(data[:curr_len])
+            data = data[curr_len:]
+
         self.conn.send(len_msg)
-        self.conn.send(data)
+        for packet in packets:
+            self.conn.send(data)
 
     def recv(self):
         try:
