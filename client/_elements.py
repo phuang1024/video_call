@@ -72,9 +72,9 @@ class TextInput:
         self.editing = False
         self.frame = 0
 
-        self.key_rpt_count = {}
-        self.key_rpt_init = 400
-        self.key_rpt_int = 35
+        self.key_rpt_count = {}  # Repeat counters
+        self.key_rpt_init = 400  # Repeat initial
+        self.key_rpt_int = 40    # Repeat interval
         self.clock = pygame.time.Clock()
 
     def draw(self, window, events, loc, size):
