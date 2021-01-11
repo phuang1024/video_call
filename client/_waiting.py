@@ -38,8 +38,7 @@ class Waiting:
         self.info = {}
         self.chat_msgs = []
         self.is_host = False
-
-        threading.Thread(target=self.get_info).start()
+        self.get_data_started = False
 
     def chat_send(self):
         while self.chat_sending:
@@ -68,6 +67,9 @@ class Waiting:
                 return
 
     def draw(self, window, events):
+        if not self.get_data_started:
+            threading.Thread(target=self.get_info).start()
+            self.get_data_started = True
         width, height = window.get_size()
 
         window.fill(WHITE)
