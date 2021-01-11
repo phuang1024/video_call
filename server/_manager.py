@@ -17,6 +17,7 @@
 
 import string
 import random
+from datetime import datetime
 
 
 class Manager:
@@ -77,13 +78,14 @@ class Meeting:
         return [attend[1] for attend in self.attendees]
 
     def new_chat_msg(self, client, msg):
+        time = datetime.now().strftime("%I:%M %p")
         name = "Unknown"
         for attend in self.attendees:
             if attend[0] is client:
                 name = attend[1]
                 break
 
-        self.chat.append((name, msg))
+        self.chat.append((time, name, msg))
 
     def get_info(self):
         data = {
