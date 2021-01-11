@@ -70,13 +70,16 @@ class Meeting:
         self.attendees.append((client, msg["name"]))
         return {"status": True, "key": self.key}
 
+    def is_host(self, client):
+        return client is self.attendees[0][0]
+
     def get_names(self):
         return [attend[1] for attend in self.attendees]
 
     def new_chat_msg(self, client, msg, time):
         name = "Unknown"
         for attend in self.attendees:
-            if attend[0] == client:
+            if attend[0] is client:
                 name = attend[1]
                 break
 
