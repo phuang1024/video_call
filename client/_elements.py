@@ -72,9 +72,9 @@ class TextInput:
         self.editing = False
         self.frame = 0
 
-        self.key_repeat_counters = {}
-        self.key_repeat_initial = 400
-        self.key_repeat_interval = 35
+        self.key_rpt_count = {}  # Repeat counters
+        self.key_rpt_init = 400  # Repeat initial
+        self.key_rpt_int = 40    # Repeat interval
         self.clock = pygame.time.Clock()
 
     def draw(self, window, events, loc, size):
@@ -111,8 +111,8 @@ class TextInput:
                         self.text = ""
 
                 else:
-                    if event.key not in self.key_repeat_counters:
-                        self.key_repeat_counters[event.key] = [0, event.unicode]
+                    if event.key not in self.key_rpt_count:
+                        self.key_rpt_count[event.key] = [0, event.unicode]
 
                     if event.key == pygame.K_LEFT:
                         self.cursor_pos -= 1
@@ -135,19 +135,15 @@ class TextInput:
                 self.cursor_pos = min(max(self.cursor_pos, 0), len(self.text))
 
             elif event.type == pygame.KEYUP:
-                if event.key in self.key_repeat_counters:
-                    del self.key_repeat_counters[event.key]
-        
-        for key in self.key_repeat_counters:
-            self.key_repeat_counters[key][0] += self.clock.get_time()
+                if event.key in self.key_rpt_count:
+                    del self.key_rpt_count[event.key]
 
-            if self.key_repeat_counters[key][0] >= self.key_repeat_initial:
-                self.key_repeat_counters[key][0] = (
-                    self.key_repeat_initial
-                    - self.key_repeat_interval
-                )
+        for key in self.key_rpt_count:
+            self.key_rpt_count[key][0] += self.clock.get_time()
 
-                event_key, event_unicode = key, self.key_repeat_counters[key][1]
+            if self.key_rpt_count[key][0] >= self.key_rpt_init:
+                self.key_rpt_count[key][0] = self.key_rpt_init - self.key_rpt_int
+                event_key, event_unicode = key, self.key_rpt_count[key][1]
                 pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=event_key, unicode=event_unicode))
 
         self.clock.tick()
