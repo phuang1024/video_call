@@ -18,7 +18,10 @@
 import time
 import socket
 import pickle
+import colorama
 from hashlib import sha256
+from colorama import Fore
+colorama.init()
 
 
 class Conn:
@@ -43,6 +46,10 @@ class Conn:
         self.conn.send(data)
 
     def recv(self):
-        length = int(self.conn.recv(self.header))
-        data = self.conn.recv(length)
-        return pickle.loads(data)
+        try:
+            length = int(self.conn.recv(self.header))
+            data = self.conn.recv(length)
+            return pickle.loads(data)
+        except Exception as e:
+            print(Fore.RED + f"Error in recv: {e}" + Fore.WHITE)
+            return {"type": None}
