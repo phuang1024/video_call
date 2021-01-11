@@ -57,7 +57,15 @@ class Conn:
     def recv(self):
         try:
             length = int(self.conn.recv(self.header))
-            data = self.conn.recv(length)
+
+            packet_sizes = [self.packet_size] * (length//self.packet_size)
+            if (remain := (length % self.packet_size)) != 0:
+                packet_sizes.append(remain)
+
+            data = b""
+            for size in packet_sizes:
+                data += self.conn.recv(size)
+
             return pickle.loads(data)
 
         except Exception as e:
