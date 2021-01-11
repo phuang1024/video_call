@@ -23,20 +23,23 @@ from _elements import Button, Text, TextInput
 
 
 class Waiting:
-    def __init__(self):
+    def __init__(self, conn):
+        self.conn = conn
+
         self.text_header = Text(FONT_LARGE.render("Meeting", 1, BLACK))
         self.text_attendees = Text(FONT_MED.render("Attendees", 1, BLACK))
         self.text_info = Text(FONT_MED.render("Info", 1, BLACK))
         self.text_chat = Text(FONT_MED.render("Chat", 1, BLACK))
         self.input_chat_send = TextInput(FONT_SMALL, "Send a message...", on_enter=self.chat_send)
 
-        self.frame = 0
+        self.active = True
         self.chat_sending = False
-
         self.attendees = []
         self.info = {}
         self.chat_msgs = []
         self.is_host = False
+
+        threading.Thread(target=self.get_info).start()
 
     def chat_send(self):
         while self.chat_sending:
@@ -48,27 +51,24 @@ class Waiting:
             self.conn.send({"type": "chat_send", "msg": text})
         self.chat_sending = False
 
-    def get_info(self, conn):
-        try:
-            conn.send({"type": "get", "data": "attendees"})
-            self.attendees = conn.recv()["data"]
-            conn.send({"type": "get", "data": "info"})
-            self.info = conn.recv()["data"]
-            conn.send({"type": "get", "data": "chat"})
-            self.chat_msgs = conn.recv()["data"]
-            conn.send({"type": "get", "data": "is_host"})
-            self.is_host = conn.recv()["data"]
+    def get_info(self):
+        while self.active:
+            try:
+                self.conn.send({"type": "get", "data": "attendees"})
+                self.attendees = self.conn.recv()["data"]
+                self.conn.send({"type": "get", "data": "info"})
+                self.info = self.conn.recv()["data"]
+                self.conn.send({"type": "get", "data": "chat"})
+                self.chat_msgs = self.conn.recv()["data"]
+                self.conn.send({"type": "get", "data": "is_host"})
+                self.is_host = self.conn.recv()["data"]
+                time.sleep(0.1)
 
-        except KeyError:
-            return
+            except KeyError:
+                return
 
-    def draw(self, window, events, conn):
-        self.frame += 1
-        self.conn = conn
+    def draw(self, window, events):
         width, height = window.get_size()
-
-        if self.frame % 40 == 1:
-            threading.Thread(target=self.get_info, args=(conn,)).start()
 
         window.fill(WHITE)
         self.text_header.draw(window, (width//2, 50))
