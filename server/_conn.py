@@ -35,7 +35,7 @@ class Server:
 
     def start(self, manager):
         self.server.listen()
-        print("[SERVER] Started")
+        print(Fore.GREEN + "[SERVER] Started" + Fore.WHITE)
 
         while True:
             conn, addr = self.server.accept()
