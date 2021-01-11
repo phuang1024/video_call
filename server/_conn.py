@@ -46,8 +46,8 @@ class Server:
 
 class Client:
     header = 64
-    padding = " " * header
     packet_size = 1024
+    padding = " " * header
 
     def __init__(self, conn, addr, manager):
         self.conn = conn
