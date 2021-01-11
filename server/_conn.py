@@ -171,8 +171,8 @@ class Client:
 
 
 def encrypt(msg):
-    return reversed(msg[1:] + msg[0])
+    return msg
 
 
 def decrypt(msg):
-    return reversed(msg)[-1] + reversed(msg)[:-1]
+    return msg
