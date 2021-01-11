@@ -46,7 +46,7 @@ class Server:
 class Client:
     header = 64
     padding = " " * header
-    packet = 4096
+    packet_size = 1024
 
     def __init__(self, conn, addr, manager):
         self.conn = conn
@@ -130,7 +130,7 @@ class Client:
 
         packets = []
         while data:
-            curr_len = min(len(data), self.packet)
+            curr_len = min(len(data), self.packet_size)
             packets.append(data[:curr_len])
             data = data[curr_len:]
 

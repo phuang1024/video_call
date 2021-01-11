@@ -26,7 +26,7 @@ colorama.init()
 
 class Conn:
     header = 64
-    packet = 4096
+    packet_size = 1024
     padding = " " * header
 
     def __init__(self, ip, port):
@@ -46,7 +46,7 @@ class Conn:
 
         packets = []
         while data:
-            curr_len = min(len(data), self.packet)
+            curr_len = min(len(data), self.packet_size)
             packets.append(data[:curr_len])
             data = data[curr_len:]
 
