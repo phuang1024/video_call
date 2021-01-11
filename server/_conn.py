@@ -64,44 +64,50 @@ class Client:
         while self.active:
             msg = self.recv()
 
-            if msg["type"] == "quit":
-                self.conn.close()
-                self.manager.remove(self.addr)
-                self.active = False
-                self.alert("INFO", "Disconnected")
-                return
+            try:
+                if msg["type"] == "quit":
+                    self.conn.close()
+                    self.manager.remove(self.addr)
+                    self.active = False
+                    self.alert("INFO", "Disconnected")
+                    return
 
-            elif msg["type"] == "new_meeting":
-                result = self.manager.new_meeting(self, msg)
-                if result["status"]:
-                    self.meeting = self.manager.meetings[result["key"]]
-                    self.send({"type": "new_meeting", "status": True})
-                    self.alert("INFO", "Created meeting")
-                else:
-                    self.send({"type": "new_meeting", "status": False, "error": result["error"]})
-                    self.alert("WARNING", "Failed to create meeting with error: " + result["error"])
+                elif msg["type"] == "new_meeting":
+                    result = self.manager.new_meeting(self, msg)
+                    if result["status"]:
+                        self.meeting = self.manager.meetings[result["key"]]
+                        self.send({"type": "new_meeting", "status": True})
+                        self.alert("INFO", "Created meeting")
+                    else:
+                        self.send({"type": "new_meeting", "status": False, "error": result["error"]})
+                        self.alert("WARNING", "Failed to create meeting with error: " + result["error"])
 
-            elif msg["type"] == "chat_send":
-                curr_time = datetime.now().strftime("%I:%M %p")
-                self.meeting.new_chat_msg(self, msg["msg"], curr_time)
+                elif msg["type"] == "chat_send":
+                    curr_time = datetime.now().strftime("%I:%M %p")
+                    self.meeting.new_chat_msg(self, msg["msg"], curr_time)
 
-            elif msg["type"] == "join_meeting":
-                result = self.manager.join_meeting(self, msg)
-                if result["status"]:
-                    self.meeting = self.manager.meetings[result["key"]]
-                    self.send({"type": "join_meeting", "status": True})
-                    self.alert("INFO", "Joined meeting")
-                else:
-                    self.send({"type": "join_meeting", "status": False, "error": result["error"]})
-                    self.alert("WARNING", "Failed to join meeting with error: " + result["error"])
+                elif msg["type"] == "join_meeting":
+                    result = self.manager.join_meeting(self, msg)
+                    if result["status"]:
+                        self.meeting = self.manager.meetings[result["key"]]
+                        self.send({"type": "join_meeting", "status": True})
+                        self.alert("INFO", "Joined meeting")
+                    else:
+                        self.send({"type": "join_meeting", "status": False, "error": result["error"]})
+                        self.alert("WARNING", "Failed to join meeting with error: " + result["error"])
 
-            elif msg["type"] == "get":
-                if msg["data"] == "attendees":
-                    self.send({"type": "get", "data": self.meeting.get_names()})
-                elif msg["data"] == "info":
-                    self.send({"type": "get", "data": self.meeting.get_info()})
-                elif msg["data"] == "chat":
-                    self.send({"type": "get", "data": self.meeting.chat})
+                elif msg["type"] == "get":
+                    if msg["data"] == "attendees":
+                        self.send({"type": "get", "data": self.meeting.get_names()})
+                    elif msg["data"] == "info":
+                        self.send({"type": "get", "data": self.meeting.get_info()})
+                    elif msg["data"] == "chat":
+                        self.send({"type": "get", "data": self.meeting.chat})
+
+            except Exception as e:
+                e = str(e)
+                error_msg = e if len(e) < 25 else e[:25] + "..."
+                self.alert("ERROR", f"Error in processing msg (catched): {error_msg}")
 
     def auth(self):
         test_data = str(time.time()).encode()
