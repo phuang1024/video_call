@@ -136,7 +136,7 @@ class Client:
 
         self.conn.send(len_msg)
         for packet in packets:
-            self.conn.send(data)
+            self.conn.send(packet)
 
     def recv(self):
         try:
