@@ -160,3 +160,17 @@ class TextInput:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     return True
         return False
+
+
+class QuitDialog:
+    def __init__(self):
+        self.button_quit = Button(FONT_MED.render("Quit?", 1, RED))
+
+    def draw(self, window, events, loc, size):
+        self.button_quit.draw(window, events, loc, size)
+        clicked = self.button_quit.clicked(events, loc, size)
+
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                return clicked
+        return None
