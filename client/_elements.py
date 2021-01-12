@@ -72,9 +72,9 @@ class TextInput:
         self.editing = False
         self.frame = 0
 
-        self.key_rpt_count = {}
-        self.key_rpt_init = 400
-        self.key_rpt_int = 35
+        self.rpt_count = {}
+        self.rpt_init = 400
+        self.rpt_int = 35
         self.clock = pygame.time.Clock()
 
     def draw(self, window, events, loc, size):
@@ -111,8 +111,8 @@ class TextInput:
                         self.text = ""
 
                 else:
-                    if event.key not in self.key_rpt_count:
-                        self.key_rpt_count[event.key] = [0, event.unicode]
+                    if event.key not in self.rpt_count:
+                        self.rpt_count[event.key] = [0, event.unicode]
 
                     if event.key == pygame.K_LEFT:
                         self.cursor_pos -= 1
@@ -135,15 +135,15 @@ class TextInput:
                 self.cursor_pos = min(max(self.cursor_pos, 0), len(self.text))
 
             elif event.type == pygame.KEYUP:
-                if event.key in self.key_rpt_count:
-                    del self.key_rpt_count[event.key]
+                if event.key in self.rpt_count:
+                    del self.rpt_count[event.key]
 
-        for key in self.key_rpt_count:
-            self.key_rpt_count[key][0] += self.clock.get_time()
+        for key in self.rpt_count:
+            self.rpt_count[key][0] += self.clock.get_time()
 
-            if self.key_rpt_count[key][0] >= self.key_rpt_init:
-                self.key_rpt_count[key][0] = self.key_rpt_init - self.key_rpt_int
-                event_key, event_unicode = key, self.key_rpt_count[key][1]
+            if self.rpt_count[key][0] >= self.rpt_init:
+                self.rpt_count[key][0] = self.rpt_init - self.rpt_int
+                event_key, event_unicode = key, self.rpt_count[key][1]
                 pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=event_key, unicode=event_unicode))
 
         self.clock.tick()
