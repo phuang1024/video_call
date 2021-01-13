@@ -175,6 +175,7 @@ class Scrollable:
         for text in texts:
             surf = self.font.render(text, 1, BLACK)
             surface.blit(surf, (self.text_dist, curr_y))
+            curr_y += self.text_dist
 
         window.blit(surface, loc)
         pygame.draw.rect(window, BLACK, (*loc, *size), 2)
