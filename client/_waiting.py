@@ -72,7 +72,7 @@ class Waiting:
                 self.meeting_started = self.conn.recv()["data"]
 
             except KeyError:
-                return
+                continue
 
     def start_meeting(self):
         self.conn.send({"type": "start_meeting"})
