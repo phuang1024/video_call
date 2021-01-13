@@ -25,8 +25,10 @@ if os.path.isfile("settings.json"):
     with open("settings.json", "r") as file:
         settings = json.load(file)
     IP = settings["ip"]
+    ENCRYPT_OFFSET = settings["encrypt_offset"]
 else:
     IP = input("IP address: ")
+    ENCRYPT_OFFSET = 17
 
 FPS = 60
 

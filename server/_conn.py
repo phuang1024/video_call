@@ -24,6 +24,7 @@ import colorama
 from zlib import compress, decompress
 from hashlib import sha256
 from colorama import Fore
+from _constants import *
 colorama.init()
 
 
@@ -50,7 +51,6 @@ class Client:
     padding = " " * header
     packet_size = 1024
     raise_recv_error = True
-    encrypt_seed = "myseed"
 
     def __init__(self, conn, addr, manager):
         self.conn = conn
@@ -146,7 +146,7 @@ class Client:
 
     def send(self, obj):
         data = pickle.dumps(obj)
-        data = encrypt(data, self.encrypt_seed)
+        data = encrypt(data, ENCRYPT_OFFSET)
         len_msg = (str(len(data)) + self.padding)[:self.header].encode()
 
         packets = []
@@ -172,7 +172,7 @@ class Client:
             for size in packet_sizes:
                 data += self.conn.recv(size)
 
-            data = decrypt(data, self.encrypt_seed)
+            data = decrypt(data, ENCRYPT_OFFSET)
             return pickle.loads(data)
 
         except Exception as e:
@@ -186,10 +186,7 @@ class Client:
             return {"type": None}
 
 
-def encrypt(msg, seed):
-    random.seed(seed)
-    offset = random.randint(0, 255)
-
+def encrypt(msg, offset):
     msg = compress(msg)
     chars = [ch for ch in msg]
     chars = [ch+offset+i for i, ch in enumerate(chars)]
@@ -198,10 +195,7 @@ def encrypt(msg, seed):
     return msg
 
 
-def decrypt(msg, seed):
-    random.seed(seed)
-    offset = random.randint(0, 255)
-
+def decrypt(msg, offset):
     chars = [ch for ch in msg]
     chars = [ch-offset-i for i, ch in enumerate(chars)]
     chars = [ch % 256 for ch in chars]
