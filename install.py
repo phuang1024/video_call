@@ -33,7 +33,7 @@ def main():
         return
 
     ip = input("Server local IP address: ")
-    encrypt_offset = input("Encryption offset (best if hard to guess): ")
+    encrypt_offset = int(input("Encryption offset (best if hard to guess): "))
     settings = {"ip": ip, "encrypt_offset": encrypt_offset}
 
     print("Cloning repository...")
@@ -44,8 +44,7 @@ def main():
     shutil.copytree(os.path.join(clone, "client"), client)
 
     print("Removing cloned files...")
-    #shutil.rmtree(clone)
-    print(clone)
+    shutil.rmtree(clone)
 
     print("Setting up settings...")
     with open(os.path.join(server, "settings.json"), "w") as file:
