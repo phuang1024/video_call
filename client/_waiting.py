@@ -43,12 +43,14 @@ class Waiting:
 
     def chat_send(self):
         while self.chat_sending:
-            time.sleep(0.01)
+            time.sleep(0.05)
 
         self.chat_sending = True
+
         text = self.input_chat_send.text
         if text.strip() != "":
             self.conn.send({"type": "chat_send", "msg": text})
+
         self.chat_sending = False
 
     def get_info(self):

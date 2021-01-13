@@ -15,6 +15,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import threading
 import pygame
 from _constants import *
 
@@ -107,7 +108,7 @@ class TextInput:
                     self.editing = False
                     if self.on_enter is not None:
                         self.editing = True
-                        self.on_enter()
+                        threading.Thread(target=self.on_enter).start()
                         self.text = ""
 
                 else:
