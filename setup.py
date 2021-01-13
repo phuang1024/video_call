@@ -18,6 +18,7 @@
 import sys
 import os
 import json
+import shutil
 
 
 def main():
@@ -28,12 +29,33 @@ def main():
     clone = os.path.join(parent, "clone")
 
     if os.path.isdir(server) or os.path.isdir(client) or os.path.isdir(clone):
-        print("Directories \"server\", \"client\", and \"clone\" already exist.")
+        print("Directories \"server\", \"client\", or \"clone\" already exist.")
         return
 
     ip = input("Server local IP address: ")
     encrypt_offset = input("Encryption offset (best if hard to guess): ")
     settings = {"ip": ip, "encrypt_offset": encrypt_offset}
+
+    print("Cloning repository...")
+    os.system(f"git clone https://github.com/HuangPatrick16777216/video_call.git {clone}")
+
+    print("Copying files...")
+    shutil.copytree(os.path.join(clone, "server"), server)
+    shutil.copytree(os.path.join(clone, "client"), client)
+
+    print("Removing cloned files...")
+    #shutil.rmtree(clone)
+    print(clone)
+
+    print("Setting up settings...")
+    with open(os.path.join(server, "settings.json"), "w") as file:
+        json.dump(settings, file)
+    with open(os.path.join(client, "settings.json"), "w") as file:
+        json.dump(settings, file)
+
+    print("Installing packages...")
+    os.system("pip install pygame")
+    os.system("pip install colorama")
 
 
 main()
