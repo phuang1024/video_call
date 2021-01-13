@@ -58,6 +58,7 @@ class Meeting:
     def __init__(self, key, host, msg):
         self.key = key
 
+        self.started = False
         self.attendees = [(host, msg["name"])]
         self.password = msg["pword"]
         self.chat = []

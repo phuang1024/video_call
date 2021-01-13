@@ -21,6 +21,7 @@ from _conn import Conn
 from _elements import QuitDialog
 from _login import Login
 from _waiting import Waiting
+from _meeting import Meeting
 pygame.init()
 
 
@@ -38,6 +39,7 @@ def main():
     pages = {
         "login": Login(conn),
         "waiting": Waiting(conn),
+        "meeting": Meeting(conn),
     }
 
     resized = False
