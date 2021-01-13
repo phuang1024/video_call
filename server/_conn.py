@@ -85,6 +85,10 @@ class Client:
                         self.send({"type": "new_meeting", "status": False, "error": result["error"]})
                         self.alert("WARNING", "Failed to create meeting with error: " + result["error"])
 
+                elif msg["type"] == "start_meeting":
+                    if self.meeting.is_host(self):
+                        self.meeting.started = True
+
                 elif msg["type"] == "chat_send":
                     self.meeting.new_chat_msg(self, msg["msg"])
 
@@ -107,6 +111,8 @@ class Client:
                         self.send({"type": "get", "data": self.meeting.chat})
                     elif msg["data"] == "is_host":
                         self.send({"type": "get", "data": self.meeting.is_host(self)})
+                    elif msg["data"] == "meeting_started":
+                        self.send({"type": "get", "data": self.meeting.started})
 
             except Exception as e:
                 e = str(e)
