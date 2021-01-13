@@ -59,7 +59,7 @@ def main():
             elif event.type == pygame.ACTIVEEVENT and resized:
                 window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
                 resized = False
-            
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q and control_pressed:
                     quit_dialog_active = True
