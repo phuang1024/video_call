@@ -115,6 +115,11 @@ class Client:
                     elif msg["data"] == "meeting_started":
                         self.send({"type": "get", "data": self.meeting.started})
 
+                elif msg["type"] == "meeting_get":
+                    self.send({"type": "meeting_get", "data": self.meeting.get_names()})
+                    self.send({"type": "meeting_get", "data": self.meeting.videos})
+                    data = self.recv()
+
             except Exception as e:
                 e = str(e)
                 error_msg = e if len(e) < 50 else e[:50] + "..."
