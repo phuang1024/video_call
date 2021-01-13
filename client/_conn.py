@@ -15,6 +15,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import time
 import random
 import socket
 import pickle
@@ -61,6 +62,7 @@ class Conn:
     def recv(self):
         try:
             length = int(self.conn.recv(self.header))
+            time.sleep(0.05)
 
             packet_sizes = [self.packet_size] * (length//self.packet_size)
             if (remain := (length % self.packet_size)) != 0:
