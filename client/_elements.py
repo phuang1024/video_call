@@ -164,6 +164,8 @@ class TextInput:
 
 
 class Scrollable:
+    scroll_dist = 18
+
     def __init__(self, font, text_dist):
         self.font = font
         self.text_dist = text_dist
@@ -180,6 +182,15 @@ class Scrollable:
 
         window.blit(surface, loc)
         pygame.draw.rect(window, BLACK, (*loc, *size), 2)
+
+        mouse = pygame.mouse.get_pos()
+        mouse_in_border = loc[0] <= mouse[0] <= loc[0]+size[0] and loc[1] <= mouse[1] <= loc[1]+size[1]
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and mouse_in_border:
+                if event.button == 4:
+                    self.scroll_pos -= self.scroll_dist
+                elif event.button == 5:
+                    self.scroll_pos += self.scroll_dist
 
 
 class QuitDialog:
