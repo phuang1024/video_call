@@ -32,6 +32,7 @@ class Waiting:
         self.text_chat = Text(FONT_MED.render("Chat", 1, BLACK))
         self.scroll_chat_msgs = Scrollable(FONT_SMALL, 20)
         self.input_chat_send = TextInput(FONT_SMALL, "Send a message...", on_enter=self.chat_send)
+        self.button_start_meeting = Button(FONT_MED.render("Start meeting", 1, BLACK))
 
         self.active = True
         self.chat_sending = False
@@ -68,6 +69,9 @@ class Waiting:
             except KeyError:
                 return
 
+    def start_meeting(self):
+        pass
+
     def draw(self, window, events):
         if not self.get_data_started:
             threading.Thread(target=self.get_info).start()
@@ -79,6 +83,9 @@ class Waiting:
         self.text_attendees.draw(window, (width//4, 150))
         self.text_info.draw(window, (width//2, 150))
         self.text_chat.draw(window, (width*3/4, 150))
+        if self.button_start_meeting.draw(window, events, (width/2, height-75), (300, 50)):
+            self.start_meeting()
+            return "meeting"
 
         for i, attend in enumerate(self.attendees):
             Text(FONT_SMALL.render(attend, 1, BLACK)).draw(window, (width//4, 200+i*30))
