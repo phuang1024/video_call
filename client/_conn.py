@@ -30,6 +30,7 @@ class Conn:
     packet_size = 1024
     padding = " " * header
     raise_recv_error = False
+    encrypt_offset = 23
 
     def __init__(self, ip, port):
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -44,7 +45,7 @@ class Conn:
 
     def send(self, obj):
         data = pickle.dumps(obj)
-        data = encrypt(data)
+        data = encrypt(data, self.encrypt_offset)
         len_msg = (str(len(data)) + self.padding)[:self.header].encode()
 
         packets = []
@@ -69,7 +70,7 @@ class Conn:
             for size in packet_sizes:
                 data += self.conn.recv(size)
 
-            data = decrypt(data)
+            data = decrypt(data, self.encrypt_offset)
             return pickle.loads(data)
 
         except Exception as e:

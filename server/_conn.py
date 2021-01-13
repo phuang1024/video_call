@@ -49,6 +49,7 @@ class Client:
     padding = " " * header
     packet_size = 1024
     raise_recv_error = True
+    encrypt_offset = 23
 
     def __init__(self, conn, addr, manager):
         self.conn = conn
@@ -137,7 +138,7 @@ class Client:
 
     def send(self, obj):
         data = pickle.dumps(obj)
-        data = encrypt(data)
+        data = encrypt(data, self.encrypt_offset)
         len_msg = (str(len(data)) + self.padding)[:self.header].encode()
 
         packets = []
@@ -162,7 +163,7 @@ class Client:
             for size in packet_sizes:
                 data += self.conn.recv(size)
 
-            data = decrypt(data)
+            data = decrypt(data, self.encrypt_offset)
             return pickle.loads(data)
 
         except Exception as e:
