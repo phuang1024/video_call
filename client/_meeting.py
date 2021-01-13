@@ -26,6 +26,18 @@ class Meeting:
     def __init__(self, conn):
         self.conn = conn
 
+        self.video = False
+        self.button_video_on = Button(FONT_MED.render("Video ON", 1, BLACK))
+        self.button_video_off = Button(FONT_MED.render("Video OFF", 1, BLACK))
+
     def draw(self, window, events):
         width, height = window.get_size()
+
         window.fill(WHITE)
+
+        if self.video:
+            if self.button_video_off.draw(window, events, (20, height-70), (200, 50)):
+                self.video = False
+        else:
+            if self.button_video_on.draw(window, events, (20, height-70), (200, 50)):
+                self.video = True
