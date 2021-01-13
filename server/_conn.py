@@ -48,6 +48,7 @@ class Client:
     header = 64
     padding = " " * header
     packet_size = 1024
+    raise_recv_error = True
 
     def __init__(self, conn, addr, manager):
         self.conn = conn
@@ -168,6 +169,10 @@ class Client:
             e = str(e)
             error_msg = e if len(e) < 50 else e[:50] + "..."
             print(Fore.RED + f"Error in recv (catched): {error_msg}" + Fore.WHITE)
+
+            if self.raise_recv_error:
+                raise Exception("Error in receive, server is still running.")
+
             return {"type": None}
 
 

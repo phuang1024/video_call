@@ -18,6 +18,7 @@
 import pygame
 from _constants import *
 from _conn import Conn
+from _elements import QuitDialog
 from _login import Login
 from _waiting import Waiting
 pygame.init()
@@ -29,6 +30,9 @@ def main():
 
     width, height = 1280, 720
     conn = Conn(IP, 5555)
+
+    quit_dialog = QuitDialog()
+    quit_dialog_active = False
 
     page = "login"
     pages = {
@@ -44,11 +48,7 @@ def main():
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
-                for key in pages:
-                    pages[key].active = False
-                conn.send({"type": "quit"})
-                pygame.quit()
-                return
+                quit_dialog_active = True
 
             elif event.type == pygame.VIDEORESIZE:
                 resized = True
@@ -62,6 +62,17 @@ def main():
         result = pages[page].draw(window, events, conn)
         if result is not None:
             page = result
+
+        if quit_dialog_active:
+            result = quit_dialog.draw(window, events, (width-65, 10), (110, 40))
+            if result == True:
+                for key in pages:
+                    pages[key].active = False
+                conn.send({"type": "quit"})
+                pygame.quit()
+                return
+            elif result == False:
+                quit_dialog_active = False
 
 
 main()
