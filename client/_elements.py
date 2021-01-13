@@ -164,7 +164,7 @@ class TextInput:
 
 
 class Scrollable:
-    scroll_dist = 18
+    scroll_dist = 23
 
     def __init__(self, font, text_dist):
         self.font = font
@@ -188,9 +188,9 @@ class Scrollable:
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and mouse_in_border:
                 if event.button == 4:
-                    self.scroll_pos -= self.scroll_dist
-                elif event.button == 5:
                     self.scroll_pos += self.scroll_dist
+                elif event.button == 5:
+                    self.scroll_pos -= self.scroll_dist
 
                 self.scroll_pos = max(self.scroll_pos, -1 * self.text_dist * len(texts))
                 self.scroll_pos = min(self.scroll_pos, size[1] - self.text_dist*2)
