@@ -192,6 +192,9 @@ class Scrollable:
                 elif event.button == 5:
                     self.scroll_pos += self.scroll_dist
 
+                self.scroll_pos = max(self.scroll_pos, 0)
+                self.scroll_pos = min(self.scroll_pos, size[1] - self.text_dist*2)
+
 
 class QuitDialog:
     def __init__(self):
