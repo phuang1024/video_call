@@ -29,6 +29,7 @@ class Conn:
     header = 64
     packet_size = 1024
     padding = " " * header
+    raise_recv_error = True
 
     def __init__(self, ip, port):
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -75,6 +76,10 @@ class Conn:
             e = str(e)
             error_msg = e if len(e) < 50 else e[:50] + "..."
             print(Fore.RED + f"Error in recv (catched): {error_msg}" + Fore.WHITE)
+
+            if self.raise_recv_error:
+                raise Exception()
+
             return {"type": None}
 
 
