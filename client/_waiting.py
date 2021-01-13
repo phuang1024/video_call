@@ -114,4 +114,4 @@ class Waiting:
             if time != "":
                 string = f"({time}) " + string
             chat_msgs.append(string)
-        self.scroll_chat_msgs.draw(window, events, (width*3/4-width/8+50, 150), (width/4-100, height-250), chat_msgs)
+        self.scroll_chat_msgs.draw(window, events, (width*13/20, 200), (width/5, height-300), chat_msgs)
