@@ -36,11 +36,13 @@ class Waiting:
 
         self.active = True
         self.chat_sending = False
+        self.get_data_started = False
+
         self.attendees = []
         self.info = {}
         self.chat_msgs = []
         self.is_host = False
-        self.get_data_started = False
+        self.meeting_started = False
 
     def chat_send(self):
         while self.chat_sending:
@@ -65,17 +67,22 @@ class Waiting:
                 self.chat_msgs = self.conn.recv()["data"]
                 self.conn.send({"type": "get", "data": "is_host"})
                 self.is_host = self.conn.recv()["data"]
+                self.conn.send({"type": "get", "data": "meeting_started"})
+                self.meeting_started = self.conn.recv()["data"]
 
             except KeyError:
                 return
 
     def start_meeting(self):
-        pass
+        self.conn.send({"type": "start_meeting"})
 
     def draw(self, window, events):
         if not self.get_data_started:
             threading.Thread(target=self.get_info).start()
             self.get_data_started = True
+        if self.meeting_started:
+            return "meeting"
+
         width, height = window.get_size()
 
         window.fill(WHITE)
@@ -83,9 +90,10 @@ class Waiting:
         self.text_attendees.draw(window, (width//4, 150))
         self.text_info.draw(window, (width//2, 150))
         self.text_chat.draw(window, (width*3/4, 150))
-        if self.button_start_meeting.draw(window, events, (width/2, height-75), (300, 50)):
-            self.start_meeting()
-            return "meeting"
+        if self.is_host:
+            if self.button_start_meeting.draw(window, events, (width/2, height-75), (300, 50)):
+                self.start_meeting()
+                return "meeting"
 
         for i, attend in enumerate(self.attendees):
             Text(FONT_SMALL.render(attend, 1, BLACK)).draw(window, (width//4, 200+i*30))
