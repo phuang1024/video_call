@@ -176,13 +176,19 @@ class Client:
             return {"type": None}
 
 
-def encrypt(msg):
+def encrypt(msg, offset):
     msg = compress(msg)
-    msg = msg[1:] + msg[0:1]
+    chars = [ch for ch in msg]
+    chars = [ch+offset+i for i, ch in enumerate(chars)]
+    chars = [ch % 256 for ch in chars]
+    msg = bytes(chars)
     return msg
 
 
-def decrypt(msg):
-    msg = msg[len(msg)-1:len(msg)] + msg[:-1]
+def decrypt(msg, offset):
+    chars = [ch for ch in msg]
+    chars = [ch-offset-i for i, ch in enumerate(chars)]
+    chars = [ch % 256 for ch in chars]
+    msg = bytes(chars)
     msg = decompress(msg)
     return msg
