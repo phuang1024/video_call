@@ -19,7 +19,7 @@ import time
 import threading
 import pygame
 from _constants import *
-from _elements import Button, Text, TextInput
+from _elements import Button, Text, TextInput, Scrollable
 
 
 class Waiting:
@@ -30,6 +30,7 @@ class Waiting:
         self.text_attendees = Text(FONT_MED.render("Attendees", 1, BLACK))
         self.text_info = Text(FONT_MED.render("Info", 1, BLACK))
         self.text_chat = Text(FONT_MED.render("Chat", 1, BLACK))
+        self.scroll_chat_msgs = Scrollable(FONT_SMALL, 20)
         self.input_chat_send = TextInput(FONT_SMALL, "Send a message...", on_enter=self.chat_send)
 
         self.active = True
@@ -105,9 +106,12 @@ class Waiting:
                 Text(FONT_SMALL.render(f"{name}: {info}", 1, BLACK)).draw(window, (width//2, 200+i*30))
 
         self.input_chat_send.draw(window, events, (width*3/4, height-75), (width//6, 50))
+
+        chat_msgs = []
         for i, msg in enumerate(self.chat_msgs):
             time, person, string = msg
             string = f"{person}: {string}"
             if time != "":
                 string = f"({time}) " + string
-            Text(FONT_SMALL.render(string, 1, BLACK)).draw(window, (width*3/4, 200+i*30))
+            chat_msgs.append(string)
+        self.scroll_chat_msgs.draw(window, events, (width*3/4-width/8, 150), (width/4, height-250), chat_msgs)
