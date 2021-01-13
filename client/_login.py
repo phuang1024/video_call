@@ -22,7 +22,8 @@ from _elements import Button, Text, TextInput
 
 
 class Login:
-    def __init__(self):
+    def __init__(self, conn):
+        self.conn = conn
         self.status = "CHOOSE"
         self.key = None
         self.error_msg = None
@@ -42,30 +43,30 @@ class Login:
         self.input_create_pword = TextInput(FONT_MED, "Meeting password", True)
         self.button_create = Button(FONT_MED.render("Create meeting", 1, BLACK))
 
-    def create_meeting(self, conn):
-        conn.send({"type": "new_meeting", "name": self.input_name.text, "pword": self.input_create_pword.text})
-        result = conn.recv()
+    def create_meeting(self):
+        self.conn.send({"type": "new_meeting", "name": self.input_name.text, "pword": self.input_create_pword.text})
+        result = self.conn.recv()
         if result["type"] is None:
-            self.create_meeting(conn)
+            self.create_meeting(self.conn)
             return
 
         if not result["status"]:
             self.error_msg = result["error"]
         return result["status"]
 
-    def join_meeting(self, conn):
-        conn.send({"type": "join_meeting", "name": self.input_name.text,
+    def join_meeting(self):
+        self.conn.send({"type": "join_meeting", "name": self.input_name.text,
             "key": self.input_join_code.text, "pword": self.input_join_pword.text})
-        result = conn.recv()
+        result = self.conn.recv()
         if result["type"] is None:
-            self.join_meeting(conn)
+            self.join_meeting(self.conn)
             return
 
         if not result["status"]:
             self.error_msg = result["error"]
         return result["status"]
 
-    def draw(self, window, events, conn):
+    def draw(self, window, events):
         width, height = window.get_size()
 
         window.fill(WHITE)
@@ -92,13 +93,13 @@ class Login:
                 self.input_join_code.draw(window, events, (width//2, height//2+75), (300, 50))
                 self.input_join_pword.draw(window, events, (width//2, height//2+150), (300, 50))
                 if self.button_join.draw(window, events, (width//2, height//2+255), (300, 50)):
-                    status = self.join_meeting(conn)
+                    status = self.join_meeting()
                     if status:
                         return "waiting"
 
             elif self.status == "CREATE":
                 self.input_create_pword.draw(window, events, (width//2, height//2+75), (300, 50))
                 if self.button_create.draw(window, events, (width//2, height//2+150), (300, 50)):
-                    status = self.create_meeting(conn)
+                    status = self.create_meeting()
                     if status:
                         return "waiting"

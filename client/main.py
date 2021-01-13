@@ -36,7 +36,7 @@ def main():
 
     page = "login"
     pages = {
-        "login": Login(),
+        "login": Login(conn),
         "waiting": Waiting(conn),
     }
 
@@ -65,7 +65,7 @@ def main():
                     quit_dialog_active = True
 
         window.fill(BLACK)
-        result = pages[page].draw(window, events, conn)
+        result = pages[page].draw(window, events)
         if result is not None:
             page = result
 
