@@ -168,9 +168,15 @@ class QuitDialog:
 
     def draw(self, window, events, loc, size):
         self.button_quit.draw(window, events, loc, size)
-        clicked = self.button_quit.clicked(events, loc, size)
+        button_clicked = self.button_quit.clicked(events, loc, size)
 
+        clicked = False
         for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                return clicked
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                clicked = True
+
+        if button_clicked:
+            return True
+        elif clicked:
+            return False
         return None
