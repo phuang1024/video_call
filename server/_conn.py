@@ -88,6 +88,7 @@ class Client:
                 elif msg["type"] == "start_meeting":
                     if self.meeting.is_host(self):
                         self.meeting.started = True
+                        self.alert("INFO", "Started meeting")
 
                 elif msg["type"] == "chat_send":
                     self.meeting.new_chat_msg(self, msg["msg"])
