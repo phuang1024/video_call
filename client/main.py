@@ -71,6 +71,8 @@ def main():
 
         if quit_dialog_active:
             result = quit_dialog.draw(window, events, (width-65, 10), (110, 40))
+
+            # Result may be None, so result==True and result==False.
             if result == True:
                 for key in pages:
                     pages[key].active = False
