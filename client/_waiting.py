@@ -19,7 +19,7 @@ import time
 import threading
 import pygame
 from _constants import *
-from _elements import Button, Text, TextInput
+from _elements import Button, Text, TextInput, Scrollable
 
 
 class Waiting:
@@ -30,6 +30,7 @@ class Waiting:
         self.text_attendees = Text(FONT_MED.render("Attendees", 1, BLACK))
         self.text_info = Text(FONT_MED.render("Info", 1, BLACK))
         self.text_chat = Text(FONT_MED.render("Chat", 1, BLACK))
+        self.scroll_chat_msgs = Scrollable(FONT_SMALL, 20)
         self.input_chat_send = TextInput(FONT_SMALL, "Send a message...", on_enter=self.chat_send)
 
         self.active = True
@@ -42,12 +43,14 @@ class Waiting:
 
     def chat_send(self):
         while self.chat_sending:
-            time.sleep(0.01)
+            time.sleep(0.05)
 
         self.chat_sending = True
+
         text = self.input_chat_send.text
         if text.strip() != "":
             self.conn.send({"type": "chat_send", "msg": text})
+
         self.chat_sending = False
 
     def get_info(self):
@@ -61,7 +64,6 @@ class Waiting:
                 self.chat_msgs = self.conn.recv()["data"]
                 self.conn.send({"type": "get", "data": "is_host"})
                 self.is_host = self.conn.recv()["data"]
-                time.sleep(0.1)
 
             except KeyError:
                 return
@@ -105,9 +107,12 @@ class Waiting:
                 Text(FONT_SMALL.render(f"{name}: {info}", 1, BLACK)).draw(window, (width//2, 200+i*30))
 
         self.input_chat_send.draw(window, events, (width*3/4, height-75), (width//6, 50))
+
+        chat_msgs = []
         for i, msg in enumerate(self.chat_msgs):
             time, person, string = msg
             string = f"{person}: {string}"
             if time != "":
                 string = f"({time}) " + string
-            Text(FONT_SMALL.render(string, 1, BLACK)).draw(window, (width*3/4, 200+i*30))
+            chat_msgs.append(string)
+        self.scroll_chat_msgs.draw(window, events, (width*13/20, 200), (width/5, height-300), chat_msgs)

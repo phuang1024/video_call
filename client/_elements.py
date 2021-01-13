@@ -15,6 +15,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import threading
 import pygame
 from _constants import *
 
@@ -107,7 +108,7 @@ class TextInput:
                     self.editing = False
                     if self.on_enter is not None:
                         self.editing = True
-                        self.on_enter()
+                        threading.Thread(target=self.on_enter).start()
                         self.text = ""
 
                 else:
@@ -160,6 +161,39 @@ class TextInput:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     return True
         return False
+
+
+class Scrollable:
+    scroll_dist = 18
+
+    def __init__(self, font, text_dist):
+        self.font = font
+        self.text_dist = text_dist
+        self.scroll_pos = 0
+
+    def draw(self, window, events, loc, size, texts):
+        surface = pygame.Surface(size, pygame.SRCALPHA)
+
+        curr_y = self.scroll_pos + self.text_dist
+        for text in texts:
+            surf = self.font.render(text, 1, BLACK)
+            surface.blit(surf, (self.text_dist, curr_y))
+            curr_y += self.text_dist
+
+        window.blit(surface, loc)
+        pygame.draw.rect(window, BLACK, (*loc, *size), 2)
+
+        mouse = pygame.mouse.get_pos()
+        mouse_in_border = loc[0] <= mouse[0] <= loc[0]+size[0] and loc[1] <= mouse[1] <= loc[1]+size[1]
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and mouse_in_border:
+                if event.button == 4:
+                    self.scroll_pos -= self.scroll_dist
+                elif event.button == 5:
+                    self.scroll_pos += self.scroll_dist
+
+                self.scroll_pos = max(self.scroll_pos, 0)
+                self.scroll_pos = min(self.scroll_pos, size[1] - self.text_dist*2)
 
 
 class QuitDialog:
