@@ -46,6 +46,8 @@ def main():
         clock.tick(FPS)
         pygame.display.update()
         events = pygame.event.get()
+        key = pygame.key.get_pressed()
+        control_pressed = key[pygame.K_LCTRL] or key[pygame.K_RCTRL]
         for event in events:
             if event.type == pygame.QUIT:
                 quit_dialog_active = True
@@ -57,6 +59,10 @@ def main():
             elif event.type == pygame.ACTIVEEVENT and resized:
                 window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
                 resized = False
+            
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q and control_pressed:
+                    quit_dialog_active = True
 
         window.fill(BLACK)
         result = pages[page].draw(window, events, conn)
