@@ -26,9 +26,27 @@ class Meeting:
     def __init__(self, conn):
         self.conn = conn
 
+        self.active = True
+        self.attendees = []
+        self.videos = []
+
         self.video = False
         self.button_video_on = Button(FONT_SMALL.render("Video ON", 1, BLACK))
         self.button_video_off = Button(FONT_SMALL.render("Video OFF", 1, BLACK))
+
+        threading.Thread(target=self.get_info).start()
+
+    def get_info(self):
+        while self.active:
+            try:
+                self.conn.send({"type": "meeting_get"})
+                self.attendees = self.conn.recv()["data"]
+                self.videos = self.conn.recv()["data"]
+
+                send_data = {"type": "meeting_get", "video_on": self.video}
+
+            except KeyError:
+                continue
 
     def draw(self, window, events):
         width, height = window.get_size()
