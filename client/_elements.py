@@ -162,6 +162,24 @@ class TextInput:
         return False
 
 
+class Scrollable:
+    def __init__(self, font, text_dist):
+        self.font = font
+        self.text_dist = text_dist
+        self.scroll_pos = 0
+
+    def draw(self, window, events, loc, size, texts):
+        surface = pygame.Surface(size, pygame.SRCALPHA)
+
+        curr_y = self.scroll_pos + self.text_dist
+        for text in texts:
+            surf = self.font.render(text, 1, BLACK)
+            surface.blit(surf, (self.text_dist, curr_y))
+
+        window.blit(surface, loc)
+        pygame.draw.rect(window, BLACK, (*loc, *size), 2)
+
+
 class QuitDialog:
     def __init__(self):
         self.button_quit = Button(FONT_MED.render("Quit?", 1, RED))
