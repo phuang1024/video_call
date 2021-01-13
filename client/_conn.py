@@ -29,7 +29,7 @@ class Conn:
     header = 64
     packet_size = 1024
     padding = " " * header
-    raise_recv_error = True
+    raise_recv_error = False
 
     def __init__(self, ip, port):
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -84,8 +84,12 @@ class Conn:
 
 
 def encrypt(msg):
-    return compress(msg)
+    msg = compress(msg)
+    msg = msg[1:] + msg[0:1]
+    return msg
 
 
 def decrypt(msg):
-    return decompress(msg)
+    msg = msg[len(msg)-1:len(msg)] + msg[:-1]
+    msg = decompress(msg)
+    return msg

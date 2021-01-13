@@ -177,8 +177,12 @@ class Client:
 
 
 def encrypt(msg):
-    return compress(msg)
+    msg = compress(msg)
+    msg = msg[1:] + msg[0:1]
+    return msg
 
 
 def decrypt(msg):
-    return decompress(msg)
+    msg = msg[len(msg)-1:len(msg)] + msg[:-1]
+    msg = decompress(msg)
+    return msg
