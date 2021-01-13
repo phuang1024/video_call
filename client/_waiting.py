@@ -64,7 +64,6 @@ class Waiting:
                 self.chat_msgs = self.conn.recv()["data"]
                 self.conn.send({"type": "get", "data": "is_host"})
                 self.is_host = self.conn.recv()["data"]
-                time.sleep(0.1)
 
             except KeyError:
                 return
