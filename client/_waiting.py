@@ -36,13 +36,14 @@ class Waiting:
 
         self.active = True
         self.chat_sending = False
-        self.get_data_started = False
 
         self.attendees = []
         self.info = {}
         self.chat_msgs = []
         self.is_host = False
         self.meeting_started = False
+
+        threading.Thread(target=self.get_info).start()
 
     def chat_send(self):
         while self.chat_sending:
@@ -77,9 +78,6 @@ class Waiting:
         self.conn.send({"type": "start_meeting"})
 
     def draw(self, window, events):
-        if not self.get_data_started:
-            threading.Thread(target=self.get_info).start()
-            self.get_data_started = True
         if self.meeting_started:
             return "meeting"
 
