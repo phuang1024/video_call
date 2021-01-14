@@ -117,8 +117,10 @@ class Client:
 
                 elif msg["type"] == "meeting_get":
                     self.send({"type": "meeting_get", "data": self.meeting.get_names()})
-                    self.send({"type": "meeting_get", "data": self.meeting.videos})
+                    self.send({"type": "meeting_get", "data": self.meeting.get_videos()})
                     data = self.recv()
+                    if data["video_on"]:
+                        self.meeting.set_video(self, data["video"])
 
             except Exception as e:
                 e = str(e)
