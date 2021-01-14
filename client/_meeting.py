@@ -86,7 +86,7 @@ class Meeting:
 
     def draw(self, window, events):
         if not self.threads_started:
-            #threading.Thread(target=self.get_info).start()
+            threading.Thread(target=self.get_info).start()
             threading.Thread(target=self.update_video).start()
             self.threads_started = True
 
@@ -96,9 +96,10 @@ class Meeting:
 
         x_loc = 0
         for img, res in self.videos:
-            surface = pygame.image.fromstring(img, res, "RGB")
-            window.blit(surface, (x_loc, 0))
-            x_loc += window.get_width()
+            if img is not None:
+                surface = pygame.image.fromstring(img, res, "RGB")
+                window.blit(surface, (x_loc, 0))
+                x_loc += window.get_width()
 
         if self.video_on:
             if self.button_video_off.draw(window, events, (80, height-50), (120, 30)):
