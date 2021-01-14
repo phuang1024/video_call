@@ -24,8 +24,6 @@ from _elements import Button, Text, TextInput, Scrollable
 
 
 class Meeting:
-    video_res = (640, 360)
-
     def __init__(self, conn):
         self.conn = conn
 
@@ -34,10 +32,17 @@ class Meeting:
         self.attendees = []
         self.videos = []
 
+        self.find_video_size()
+
         self.video_on = False
         self.video_curr = pygame.image.tostring(pygame.Surface(self.video_res), "RGB")
         self.button_video_on = Button(FONT_SMALL.render("Turn video on", 1, BLACK))
         self.button_video_off = Button(FONT_SMALL.render("Turn video off", 1, BLACK))
+
+    def find_video_size(self):
+        image = cv2.VideoCapture(0).read()[1]
+        height, width = image.shape[:2]
+        self.video_res = (width, height)
 
     def get_info(self):
         while self.active:
@@ -56,7 +61,7 @@ class Meeting:
 
         while self.active:
             if self.video_on:
-                rval, image = capturer.read()
+                image = capturer.read()[1]
                 image = cv2.resize(image, self.video_res)
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -82,5 +87,6 @@ class Meeting:
             if self.button_video_off.draw(window, events, (80, height-50), (120, 30)):
                 self.video_on = False
         else:
+            self.video_curr = pygame.image.tostring(pygame.Surface(self.video_res), "RGB")
             if self.button_video_on.draw(window, events, (80, height-50), (120, 30)):
                 self.video_on = True
