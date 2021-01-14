@@ -18,11 +18,14 @@
 import time
 import threading
 import pygame
+import cv2
 from _constants import *
 from _elements import Button, Text, TextInput, Scrollable
 
 
 class Meeting:
+    video_res = (640, 360)
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -30,11 +33,13 @@ class Meeting:
         self.attendees = []
         self.videos = []
 
-        self.video = False
+        self.video_on = False
+        self.video_curr = pygame.Surface(self.video_res)
         self.button_video_on = Button(FONT_SMALL.render("Video ON", 1, BLACK))
         self.button_video_off = Button(FONT_SMALL.render("Video OFF", 1, BLACK))
 
         threading.Thread(target=self.get_info).start()
+        threading.Thread(target=self.update_video).start()
 
     def get_info(self):
         while self.active:
@@ -43,19 +48,30 @@ class Meeting:
                 self.attendees = self.conn.recv()["data"]
                 self.videos = self.conn.recv()["data"]
 
-                send_data = {"type": "meeting_get", "video_on": self.video}
+                send_data = {"type": "meeting_get", "video_on": self.video_on}
 
             except KeyError:
                 continue
+
+    def update_video(self):
+        capturer = cv2.VideoCapture(0)
+
+        while self.active:
+            if self.video_on:
+                rval, image = capturer.read()
+                image = cv2.resize(image, self.video_res)
+                self.video_curr = pygame.image.frombuffer(image.tobytes(), image.shape[1::-1], "RGB")
+
+            time.sleep(0.01)
 
     def draw(self, window, events):
         width, height = window.get_size()
 
         window.fill(WHITE)
 
-        if self.video:
+        if self.video_on:
             if self.button_video_off.draw(window, events, (70, height-50), (100, 30)):
-                self.video = False
+                self.video_on = False
         else:
             if self.button_video_on.draw(window, events, (70, height-50), (100, 30)):
-                self.video = True
+                self.video_on = True
