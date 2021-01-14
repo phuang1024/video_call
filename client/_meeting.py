@@ -30,6 +30,7 @@ class Meeting:
         self.conn = conn
 
         self.active = True
+        self.threads_started = False
         self.attendees = []
         self.videos = []
 
@@ -37,9 +38,6 @@ class Meeting:
         self.video_curr = pygame.image.tostring(pygame.Surface(self.video_res), "RGB")
         self.button_video_on = Button(FONT_SMALL.render("Video ON", 1, BLACK))
         self.button_video_off = Button(FONT_SMALL.render("Video OFF", 1, BLACK))
-
-        threading.Thread(target=self.get_info).start()
-        threading.Thread(target=self.update_video).start()
 
     def get_info(self):
         while self.active:
@@ -66,9 +64,17 @@ class Meeting:
             time.sleep(0.01)
 
     def draw(self, window, events):
+        if not self.threads_started:
+            threading.Thread(target=self.get_info).start()
+            threading.Thread(target=self.update_video).start()
+            self.threads_started = True
+
         width, height = window.get_size()
 
         window.fill(WHITE)
+
+        image = pygame.image.fromstring(self.video_curr, self.video_res, "RGB")
+        window.blit(image, (0, 0))
 
         if self.video_on:
             if self.button_video_off.draw(window, events, (70, height-50), (100, 30)):
