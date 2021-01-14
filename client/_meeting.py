@@ -58,6 +58,8 @@ class Meeting:
             if self.video_on:
                 rval, image = capturer.read()
                 image = cv2.resize(image, self.video_res)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
                 surface = pygame.image.frombuffer(image.tobytes(), image.shape[1::-1], "RGB")
                 self.video_curr = pygame.image.tostring(surface, "RGB")
 
