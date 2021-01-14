@@ -42,7 +42,14 @@ class Meeting:
     def find_video_size(self):
         image = cv2.VideoCapture(0).read()[1]
         height, width = image.shape[:2]
-        self.video_res = (width, height)
+
+        width_fac = width/480
+        height_fac = height/270
+
+        if width_fac > height_fac:
+            self.video_res = (int(width/width_fac), int(height/width_fac))
+        else:
+            self.video_res = (int(width/height_fac), int(height/height_fac))
 
     def get_info(self):
         while self.active:
