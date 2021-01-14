@@ -36,8 +36,8 @@ class Meeting:
 
         self.video_on = False
         self.video_curr = pygame.image.tostring(pygame.Surface(self.video_res), "RGB")
-        self.button_video_on = Button(FONT_SMALL.render("Video ON", 1, BLACK))
-        self.button_video_off = Button(FONT_SMALL.render("Video OFF", 1, BLACK))
+        self.button_video_on = Button(FONT_SMALL.render("Turn video on", 1, BLACK))
+        self.button_video_off = Button(FONT_SMALL.render("Turn video off", 1, BLACK))
 
     def get_info(self):
         while self.active:
@@ -59,13 +59,13 @@ class Meeting:
                 rval, image = capturer.read()
                 image = cv2.resize(image, self.video_res)
                 surface = pygame.image.frombuffer(image.tobytes(), image.shape[1::-1], "RGB")
-                self.video_curr = pygame.image.tostring(surface)
+                self.video_curr = pygame.image.tostring(surface, "RGB")
 
             time.sleep(0.01)
 
     def draw(self, window, events):
         if not self.threads_started:
-            threading.Thread(target=self.get_info).start()
+            #threading.Thread(target=self.get_info).start()
             threading.Thread(target=self.update_video).start()
             self.threads_started = True
 
@@ -77,8 +77,8 @@ class Meeting:
         window.blit(image, (0, 0))
 
         if self.video_on:
-            if self.button_video_off.draw(window, events, (70, height-50), (100, 30)):
+            if self.button_video_off.draw(window, events, (80, height-50), (120, 30)):
                 self.video_on = False
         else:
-            if self.button_video_on.draw(window, events, (70, height-50), (100, 30)):
+            if self.button_video_on.draw(window, events, (80, height-50), (120, 30)):
                 self.video_on = True
