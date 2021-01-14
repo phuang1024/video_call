@@ -118,7 +118,11 @@ class Client:
                 elif msg["type"] == "meeting_get":
                     self.send({"type": "meeting_get", "data": self.meeting.get_names()})
                     self.send({"type": "meeting_get", "data": self.meeting.get_videos()})
+
                     data = self.recv()
+                    while "video_on" not in data:
+                        data = self.recv()
+
                     if data["video_on"]:
                         self.meeting.set_video(self, data["video"])
 
