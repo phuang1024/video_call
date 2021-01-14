@@ -55,7 +55,7 @@ class Manager:
 
 
 class Meeting:
-    # Attendee: (client, name, video_on, video, audio_on, audio)
+    # Attendee: (client, name, video_on, video, video_res, audio_on, audio)
     def __init__(self, key, host, msg):
         self.key = key
 
@@ -81,7 +81,7 @@ class Meeting:
         return [attend[1] for attend in self.attendees]
 
     def get_videos(self):
-        return [attend[3] for attend in self.attendees]
+        return [(attend[3], attend[4]) for attend in self.attendees]
 
     def set_video(self, client, video):
         index = None
@@ -91,7 +91,8 @@ class Meeting:
                 break
 
         if index is not None:
-            self.attendees[index][3] = video
+            self.attendees[index][3] = video[0]
+            self.attendees[index][4] = video[1]
 
     def new_chat_msg(self, client, msg):
         time = datetime.now().strftime("%I:%M %p")
