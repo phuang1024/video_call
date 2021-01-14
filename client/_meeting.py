@@ -34,7 +34,7 @@ class Meeting:
         self.videos = []
 
         self.video_on = False
-        self.video_curr = pygame.Surface(self.video_res)
+        self.video_curr = pygame.image.tostring(pygame.Surface(self.video_res), "RGB")
         self.button_video_on = Button(FONT_SMALL.render("Video ON", 1, BLACK))
         self.button_video_off = Button(FONT_SMALL.render("Video OFF", 1, BLACK))
 
@@ -60,7 +60,8 @@ class Meeting:
             if self.video_on:
                 rval, image = capturer.read()
                 image = cv2.resize(image, self.video_res)
-                self.video_curr = pygame.image.frombuffer(image.tobytes(), image.shape[1::-1], "RGB")
+                surface = pygame.image.frombuffer(image.tobytes(), image.shape[1::-1], "RGB")
+                self.video_curr = pygame.image.tostring(surface)
 
             time.sleep(0.01)
 
