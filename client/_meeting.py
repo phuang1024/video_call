@@ -58,7 +58,14 @@ class Meeting:
                 self.attendees = self.conn.recv()["data"]
                 self.videos = self.conn.recv()["data"]
 
-                send_data = {"type": "meeting_get", "video_on": self.video_on}
+                send_data = {
+                    "type": "meeting_get",
+                    "video_on": self.video_on,
+                    "video": (self.video_curr, self.video_res),
+                    "audio_on": False,
+                    "audio": None
+                }
+                self.conn.send(send_data)
 
             except KeyError:
                 continue
@@ -87,8 +94,11 @@ class Meeting:
 
         window.fill(WHITE)
 
-        image = pygame.image.fromstring(self.video_curr, self.video_res, "RGB")
-        window.blit(image, (0, 0))
+        x_loc = 0
+        for img, res in self.videos:
+            surface = pygame.image.fromstring(img, res, "RGB")
+            window.blit(surface, (x_loc, 0))
+            x_loc += window.get_width()
 
         if self.video_on:
             if self.button_video_off.draw(window, events, (80, height-50), (120, 30)):
