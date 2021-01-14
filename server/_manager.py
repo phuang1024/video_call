@@ -55,11 +55,12 @@ class Manager:
 
 
 class Meeting:
+    # Attendee: (client, name, video_on, video, video_res, audio_on, audio)
     def __init__(self, key, host, msg):
         self.key = key
 
         self.started = False
-        self.attendees = [(host, msg["name"])]
+        self.attendees = [[host, msg["name"], False, None, False, None]]
         self.password = msg["pword"]
         self.chat = []
         self.chat_prev_time = None
@@ -70,7 +71,7 @@ class Meeting:
         elif msg["pword"] != self.password:
             return {"status": False, "error": "Invalid password"}
 
-        self.attendees.append((client, msg["name"]))
+        self.attendees.append([client, msg["name"], False, None, False, None])
         return {"status": True, "key": self.key}
 
     def is_host(self, client):
@@ -78,6 +79,20 @@ class Meeting:
 
     def get_names(self):
         return [attend[1] for attend in self.attendees]
+
+    def get_videos(self):
+        return [(attend[3], attend[4]) for attend in self.attendees]
+
+    def set_video(self, client, video):
+        index = None
+        for i, attend in enumerate(self.attendees):
+            if attend[0] is client:
+                index = i
+                break
+
+        if index is not None:
+            self.attendees[index][3] = video[0]
+            self.attendees[index][4] = video[1]
 
     def new_chat_msg(self, client, msg):
         time = datetime.now().strftime("%I:%M %p")

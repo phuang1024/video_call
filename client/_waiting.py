@@ -35,8 +35,8 @@ class Waiting:
         self.button_start_meeting = Button(FONT_MED.render("Start meeting", 1, BLACK))
 
         self.active = True
+        self.threads_started = False
         self.chat_sending = False
-        self.get_data_started = False
 
         self.attendees = []
         self.info = {}
@@ -71,15 +71,15 @@ class Waiting:
                 self.meeting_started = self.conn.recv()["data"]
 
             except KeyError:
-                return
+                continue
 
     def start_meeting(self):
         self.conn.send({"type": "start_meeting"})
 
     def draw(self, window, events):
-        if not self.get_data_started:
+        if not self.threads_started:
             threading.Thread(target=self.get_info).start()
-            self.get_data_started = True
+            self.threads_started = True
         if self.meeting_started:
             return "meeting"
 
